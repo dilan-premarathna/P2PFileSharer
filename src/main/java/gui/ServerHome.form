@@ -23,7 +23,7 @@
           <text value="Search"/>
         </properties>
       </component>
-      <grid id="ddd52" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="ddd52" binding="JPFiles" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="5" bottom="0" right="0"/>
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -41,7 +41,7 @@
               <text value="Files"/>
             </properties>
           </component>
-          <component id="1a804" class="javax.swing.JTextPane" binding="textPane1" default-binding="true">
+          <component id="1a804" class="javax.swing.JTextPane" binding="textPaneFiles">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
@@ -59,7 +59,7 @@
         </constraints>
         <properties/>
       </component>
-      <grid id="813b8" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="813b8" binding="JPNeighbours" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="5"/>
         <constraints>
           <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -75,7 +75,7 @@
               <text value="Neighbours"/>
             </properties>
           </component>
-          <component id="45462" class="javax.swing.JTextPane" binding="textPane2" default-binding="true">
+          <component id="45462" class="javax.swing.JTextPane" binding="textPaneNeighbours">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
@@ -85,7 +85,7 @@
           </component>
         </children>
       </grid>
-      <grid id="8c56a" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="8c56a" binding="JPBottom" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -93,7 +93,7 @@
         <border type="none"/>
         <children/>
       </grid>
-      <grid id="1ae0b" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="1ae0b" binding="JPTop" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -102,10 +102,10 @@
         <border type="none"/>
         <children/>
       </grid>
-      <grid id="8eaaa" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="8eaaa" binding="JPServerInfo" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="5" bottom="0" right="0"/>
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="3" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <maximum-size width="-1" height="50"/>
           </grid>
         </constraints>
