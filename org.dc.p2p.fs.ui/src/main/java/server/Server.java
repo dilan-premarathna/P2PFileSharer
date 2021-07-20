@@ -4,7 +4,6 @@ import conf.ServerConfigurations;
 import gui.ServerHome;
 
 import javax.swing.*;
-import java.io.IOException;
 
 /**
  * @author janaka
