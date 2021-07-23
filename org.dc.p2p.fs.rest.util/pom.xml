@@ -32,7 +32,7 @@
                             </inputSpec>
                             <language>spring</language>
 <!--                            <language>java</language>-->
-<!--                            <library>RestTemplate</library>-->
+<!--                            <library>jersey2</library>-->
                             <output>${project.basedir}/../org.dc.p2p.fs.rest.service</output>
                             <configOptions>
                                 <apiPackage>api</apiPackage>

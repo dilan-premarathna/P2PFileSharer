@@ -88,5 +88,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.dc</groupId>
+            <artifactId>org.dc.p2p.fs.rest.client</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>
