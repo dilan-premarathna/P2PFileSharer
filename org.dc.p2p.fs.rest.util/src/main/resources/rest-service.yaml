@@ -1,0 +1,93 @@
+openapi: 3.0.1
+info:
+  title: p2p File Sharer Rest API
+  description: 'This is the Rest API service which will be facilitating file download and health check capabilities.'
+  version: 1.0.0
+servers:
+  - url: http://localhost:5050/p2pfs
+tags:
+  - name: File Downloader Service
+    description: resources for file download service
+  - name: Health Check Service
+    description: resources for healthcheck service
+paths:
+  /files/file-by-name:
+    get:
+      tags:
+        - File Downloader Service
+      summary: Download a file by name
+      description: Download a file by name
+      parameters:
+        - name: name
+          in: query
+          description: file name that need to be downloaded from the peer
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/octet-stream:
+              schema:
+                #a binary file of any type
+                type: string
+                format: binary
+            multipart/form-data:
+              schema:
+                #a multipart data file
+                type: string
+                format: binary
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        404:
+          description: files not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        5XX:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/healthcheck:
+    get:
+      tags:
+        - Health Check Service
+      summary: Check health of neibouring nodes
+      description: Check health of neibouring nodes and remove them from the network if they are not working
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+        5XX:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    HealthCheckResponse:
+      type: object
+      properties:
+        status:
+          type: string

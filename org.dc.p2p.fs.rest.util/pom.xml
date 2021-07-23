@@ -15,4 +15,37 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>3.0.27</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/rest-service.yaml
+                            </inputSpec>
+                            <language>spring</language>
+<!--                            <language>java</language>-->
+<!--                            <library>jersey2</library>-->
+                            <output>${project.basedir}/../org.dc.p2p.fs.rest.service</output>
+                            <configOptions>
+                                <apiPackage>api</apiPackage>
+                                <modelPackage>model</modelPackage>
+                                <invokerPackage>handler</invokerPackage>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                            </configOptions>
+                            <skipOverwrite>true</skipOverwrite>
+                            <modelNameSuffix>DTO</modelNameSuffix>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -9,9 +9,17 @@
     <packaging>pom</packaging>
     <version>1.0</version>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.16.RELEASE</version>
+    </parent>
+
     <modules>
         <module>org.dc.p2p.fs.ui</module>
         <module>org.dc.p2p.fs.rest.util</module>
+        <module>org.dc.p2p.fs.rest.service</module>
+        <module>org.dc.p2p.fs.rest.client</module>
     </modules>
 
     <properties>
