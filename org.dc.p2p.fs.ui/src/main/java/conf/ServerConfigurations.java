@@ -33,6 +33,10 @@ public class ServerConfigurations {
         return getIntegerProperty("BS_PORT");
     }
 
+    public String getFilesStorage(){
+        return getStringProperty("FILE_STORAGE");
+    }
+
 
     private int getIntegerProperty(String propertyName){
         try{
