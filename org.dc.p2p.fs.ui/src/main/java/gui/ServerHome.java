@@ -45,10 +45,13 @@ public class ServerHome {
   searchButton.addActionListener(new ActionListener() {
    @Override
    public void actionPerformed(ActionEvent e) {
+
     System.out.println("Searching for the files");
     // Query flooding needs to be implemented
 
     String searchString = textField1.getText();
+
+
 
     JFrame ResultFrame = new JFrame("SearchResult");
     ResultFrame.setContentPane(new SearchResult(searchString).SearchResult);
