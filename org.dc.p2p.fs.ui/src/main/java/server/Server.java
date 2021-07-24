@@ -11,7 +11,7 @@ import javax.swing.*;
 
 public class Server {
 
-    public void server_main() {
+    public static void main(String[] args) {
 
         System.out.println("Starting the server ...");
         ServerConfigurations configs = new ServerConfigurations();
@@ -25,7 +25,7 @@ public class Server {
 
     }
 
-    public static void InitServerHomeUI(ServerConfigurations configs){
+    static void InitServerHomeUI(ServerConfigurations configs){
         JFrame frame = new JFrame("ServerHome");
         frame.setContentPane(new ServerHome(configs).ServerMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

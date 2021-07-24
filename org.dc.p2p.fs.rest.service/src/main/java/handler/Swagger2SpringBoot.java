@@ -7,7 +7,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-import server.Server;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @SpringBootApplication
@@ -26,8 +25,6 @@ public class Swagger2SpringBoot implements CommandLineRunner {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Swagger2SpringBoot.class);
         builder.headless(false);
         ConfigurableApplicationContext context = builder.run(args);
-        Server svr = new Server();
-        svr.server_main();
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {
