@@ -33,10 +33,14 @@ public class ServerConfigurations {
         return getIntegerProperty("BS_PORT");
     }
 
+    public String getFilesStorage(){
+        return getStringProperty("FILE_STORAGE");
+    }
+
 
     private int getIntegerProperty(String propertyName){
         try{
-            prop.load(new FileInputStream("src/main/resources/config.properties"));
+            prop.load(new FileInputStream("org.dc.p2p.fs.ui/src/main/resources/config.properties"));
             return Integer.valueOf(prop.getProperty(propertyName));
         }catch(ClassCastException ex){
             //System.out.println(ex.getMessage());
@@ -51,7 +55,7 @@ public class ServerConfigurations {
 
     public String getStringProperty(String propertyName){
         try{
-            prop.load(new FileInputStream("src/main/resources/config.properties"));
+            prop.load(new FileInputStream("org.dc.p2p.fs.ui/src/main/resources/config.properties"));
             return prop.getProperty(propertyName);
         }catch(IOException ex){
             System.out.println(ex.getMessage());
