@@ -20,6 +20,7 @@
         <module>org.dc.p2p.fs.rest.util</module>
         <module>org.dc.p2p.fs.rest.service</module>
         <module>org.dc.p2p.fs.rest.client</module>
+        <module>org.dc.p2p.fs.server</module>
     </modules>
 
     <properties>
