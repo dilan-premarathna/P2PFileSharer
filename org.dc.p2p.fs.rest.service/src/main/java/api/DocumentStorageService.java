@@ -17,6 +17,8 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static client.api.downloadUtil.printMD5ofFile;
 import static java.nio.file.Files.readAllBytes;
 
 @Service
@@ -25,7 +27,7 @@ public class DocumentStorageService {
     private static final Logger log = LoggerFactory.getLogger(DocumentStorageService.class);
 
     public Resource getFileAsResource(String name) throws MalformedURLException {
-        File file = new File(ServerConfigurations.props.getProperty("fileDownload.tempDir") + "/" + name);
+        File file = new File(ServerConfigurations.props.getProperty("file.tempDir") + "/" + name);
         RandomAccessFile rafile;
         try {
             rafile = new RandomAccessFile(file, "rw");
@@ -34,26 +36,12 @@ public class DocumentStorageService {
             rafile.writeBytes(new String(array, StandardCharsets.UTF_8));
             long randomNum = ThreadLocalRandom.current().nextInt(1, 11);
             rafile.setLength(randomNum*1048576);
+            log.info("File size of the \"" + name + "\" file is " + randomNum + " MB");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Path DirectoryPath = Paths.get(ServerConfigurations.props.getProperty("fileDownload.tempDir")).toAbsolutePath().normalize();
+        Path DirectoryPath = Paths.get(ServerConfigurations.props.getProperty("file.tempDir")).toAbsolutePath().normalize();
         printMD5ofFile(DirectoryPath.resolve(name), name);
         return new UrlResource( DirectoryPath.resolve(name).toUri());
-
-    }
-
-    private static void printMD5ofFile(Path filePath, String name) {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-            md.update(readAllBytes(filePath));
-        } catch (Exception e) {
-            log.error("Error while calculating MD5sum of " + name + " file.");
-            e.printStackTrace();
-        }
-        byte[] digest = md.digest();
-        String myChecksum = DatatypeConverter.printHexBinary(digest).toUpperCase();
-        log.info("MD5sum of the file " + name + " is " + myChecksum);
     }
 }

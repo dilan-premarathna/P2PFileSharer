@@ -59,7 +59,7 @@ public class FileDownloaderServiceApi {
 
 
     final String[] localVarAccepts = {
-      "application/octet-stream", "multipart/form-data", "application/json"
+            "multipart/form-data"
     };
     final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
