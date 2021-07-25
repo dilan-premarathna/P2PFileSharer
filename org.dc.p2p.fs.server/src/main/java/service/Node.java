@@ -12,25 +12,26 @@ import java.util.Arrays;
 
 public class Node {
 
-    private int serverPort;
+    private final int serverPort;
     private int resultPort;
-    private int bsServerPort;
-    private int soTimeout;
-    private int retryCount=0;
-    private int retryLimit;
-    private String serverName;
-    private String serverIP;
+    private final int bsServerPort;
+    private final int soTimeout;
+    private int retryCount;
+    private final int retryLimit;
+    private final String serverName;
+    private final String serverIP;
     private String resultIP;
-    private String bsServerIP;
+    private final String bsServerIP;
     private String[] resultList;
     private Query query;
-    private Service service = new Service();
+    private final Service service = new Service();
     private List<String> fileList;
     public static List<Neighbour> neighboursList = new ArrayList<>();
-    private Communicator communicator = new Communicator();
-    private Result result = new Result();
+    private final Communicator communicator = new Communicator();
+    private final Result result = new Result();
 
-    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit){
+    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit) {
+
         this.serverIP = ip;
         this.serverName = serverName;
         this.serverPort = port;
@@ -47,21 +48,21 @@ public class Node {
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
         System.out.println(regMessage);
         String bsResponse = service.sendToBS(regMessage, bsServerIP, bsServerPort, soTimeout);
-        if (bsResponse != null){
+        if (bsResponse != null) {
             neighbours = processBSResponse(bsResponse);
-        }else {
-            System.out.println("Error occured while connecting to Boostrap Server");
+        } else {
+            System.out.println("Error occurred while connecting to Boostrap Server");
         }
         if (neighbours.length != 0) {
             boolean neighbourConnectStatus = processNeighbour(neighbours);
-            if (neighbourConnectStatus == false){
+            if (!neighbourConnectStatus) {
                 unRegisterNode();
-            } else{
-                retryCount =0;
+            } else {
+                retryCount = 0;
             }
         }
 
-        System.out.println(neighbours);
+        System.out.println(neighbours.toString());
     }
 
     public void unRegisterNode() throws Exception {
@@ -71,10 +72,10 @@ public class Node {
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
         System.out.println(bsResponse);
         retryCount += 1;
-        if (retryCount<=retryLimit){
+        if (retryCount <= retryLimit) {
             System.out.println(retryCount + " Retry to register node");
             registerNode();
-        }else {
+        } else {
             System.out.println("Retry Limit reached");
         }
     }
@@ -110,10 +111,11 @@ public class Node {
     }
 
     public boolean processNeighbour(Neighbour[] neighbours) throws Exception {
+
         boolean connectSuccess = false;
         for (Neighbour neighbour : neighbours) {
             connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort, soTimeout);
-            if (connectSuccess==false)
+            if (!connectSuccess)
                 return false;
         }
         return connectSuccess;
@@ -130,6 +132,7 @@ public class Node {
     }
 
     public void searchFiles(String fName) throws IOException {
+
         String str = isFilePresent(fName);
         if (str.length() > 0) {
             resultList = str.split("#");
@@ -153,7 +156,7 @@ public class Node {
             String str = isFilePresent(msgList[4]);
             if (str.length() > 0) {
                 String msg = " SEROK " + serverIP + " " + serverPort + " " + str + " " + "1";
-                int length = msg.length()+5;
+                int length = msg.length() + 5;
                 msg = String.format("%04d", length) + msg;
                 communicator.send(msg, msgList[2], Integer.parseInt(msgList[3]));
                 //send
@@ -181,6 +184,7 @@ public class Node {
     }
 
     public Result getResultList() {
+
         result.setResult(resultIP, resultPort, resultList);
 
         return result;
@@ -197,10 +201,12 @@ public class Node {
     }
 
     public void setFileList(List<String> fList) {
+
         fileList = fList;
     }
 
     public List<Neighbour> getNeighboursList() {
+
         return neighboursList;
     }
 }

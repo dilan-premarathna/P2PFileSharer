@@ -22,8 +22,7 @@ public class Service {
 
         try {
             socket.receive(dpResponse);
-        }
-        catch (SocketTimeoutException e) {
+        } catch (SocketTimeoutException e) {
             System.out.println("Timeout reached while receiving data from Boostrap server " + e);
             socket.close();
             return null;
