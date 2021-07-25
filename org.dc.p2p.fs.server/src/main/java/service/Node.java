@@ -2,6 +2,7 @@ package service;
 
 import util.Communicator;
 import util.Query;
+import util.Result;
 import util.Service;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class Node {
     private List<String> fileList;
     public static List<Neighbour> neighboursList = new ArrayList<>();
     private Communicator communicator = new Communicator();
+    private Result result = new Result();
 
     public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit){
         this.serverIP = ip;
@@ -122,8 +124,7 @@ public class Node {
         StringBuilder fileStr = new StringBuilder();
         for (String element : fileList
         ) {
-            if (element.contains(fName)) fileStr.append(element).append("#");
-
+            if (element.toLowerCase().contains(fName.toLowerCase())) fileStr.append(element).append("#");
         }
         return fileStr.toString();
     }
@@ -138,7 +139,7 @@ public class Node {
             System.out.println(query.getMsgString());
 
             for (Neighbour neighbour : neighboursList) {
-                communicator.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort(), 6000);
+                communicator.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
             }
         }
         System.out.println("Searching done!");
@@ -152,16 +153,16 @@ public class Node {
             String str = isFilePresent(msgList[4]);
             if (str.length() > 0) {
                 String msg = " SEROK " + serverIP + " " + serverPort + " " + str + " " + "1";
-                int length = msg.length();
+                int length = msg.length()+5;
                 msg = String.format("%04d", length) + msg;
-                communicator.send(msg, msgList[2], Integer.parseInt(msgList[3]), 6000);
+                communicator.send(msg, msgList[2], Integer.parseInt(msgList[3]));
                 //send
             } else {
                 msgList[5] = String.valueOf(Integer.parseInt(msgList[5]) - 1);
                 if (!msgList[5].equals("0")) {
                     String joined = String.join(" ", msgList);
                     for (Neighbour neighbour : neighboursList) {
-                        communicator.send(joined, neighbour.getIp(), neighbour.getPort(), 6000);
+                        communicator.send(joined, neighbour.getIp(), neighbour.getPort());
                     }
                 }
             }
@@ -179,9 +180,10 @@ public class Node {
         decodeAndAct(recQuery);
     }
 
-    public String[] getResultList() {
+    public Result getResultList() {
+        result.setResult(resultIP, resultPort, resultList);
 
-        return resultList;
+        return result;
     }
 
     public String getResultIP() {

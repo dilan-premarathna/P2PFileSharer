@@ -51,7 +51,7 @@ public class FilesApiController implements FilesApi {
                 if (name != null && !name.isEmpty()) {
                     try {
                         if (!ServerConfigurations.randomNameList.stream().anyMatch(name::equalsIgnoreCase)) {
-                            log.warn("File name " + name + " not found in the system!.");
+                            log.warn("File name \"" + name + "\" not found in the system!.");
                             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
                         }
                         realFileName =  getRealFileName(name);
@@ -59,7 +59,7 @@ public class FilesApiController implements FilesApi {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    log.info("Downloading " + realFileName + " file by client " + request.getRemoteAddr());
+                    log.info("Downloading \"" + realFileName + "\" file by client " + request.getRemoteAddr());
                     return ResponseEntity.ok().contentType(MediaType.parseMediaType(accept))
                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
                 }
@@ -84,7 +84,7 @@ public class FilesApiController implements FilesApi {
                 return fileName;
             }
         }
-        log.warn("File name " + name +" not found in the Server.");
+        log.warn("File name \"" + name +"\" not found in the Server.");
         return name;
     }
 }
