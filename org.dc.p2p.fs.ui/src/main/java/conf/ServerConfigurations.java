@@ -83,6 +83,10 @@ public class ServerConfigurations {
 
     public String getServerName(){return getStringProperty("SERVER_NAME");}
 
+    public int getSocketTimeout(){return getIntegerProperty("SO_TIMEOUT");}
+
+    public int getRetryLimit(){return getIntegerProperty("RETRY_LIMIT");}
+
     private int getIntegerProperty(String propertyName){
         try{
             prop.load(new FileInputStream("org.dc.p2p.fs.ui/src/main/resources/config.properties"));
