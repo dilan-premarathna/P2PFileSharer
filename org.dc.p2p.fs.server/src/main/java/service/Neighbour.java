@@ -3,6 +3,7 @@ package service;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketTimeoutException;
 import java.util.List;
 
 class Neighbour {
@@ -22,7 +23,7 @@ class Neighbour {
         return this.port;
     }
 
-    public boolean NeighbourConnect(List<Neighbour> neighbourList, String clientIP, int clientPort)  throws Exception {
+    public boolean NeighbourConnect(List<Neighbour> neighbourList, String clientIP, int clientPort, int soTimeout)  throws Exception {
 
         String joinMessage =   "JOIN " + clientIP + " " + clientPort;
         joinMessage = String.format("%04d", joinMessage.length() + 5) + " " + joinMessage;
@@ -33,11 +34,20 @@ class Neighbour {
         DatagramPacket packet = new DatagramPacket(messageBytes, messageBytes.length, ia, getPort());
 
         DatagramSocket socket = new DatagramSocket();
+        socket.setSoTimeout(soTimeout);
         socket.send(packet);
 
         byte[] b1 = new byte[2048];
         DatagramPacket dpResponse = new DatagramPacket(b1, b1.length);
-        socket.receive(dpResponse);
+
+        try {
+            socket.receive(dpResponse);
+        }
+        catch (SocketTimeoutException e) {
+            System.out.println("Timeout reached while receiving data from the Neighbour server " + e);
+            socket.close();
+            return false;
+        }
 
         String nodeResponse = new String(dpResponse.getData());
         System.out.println("neighbour response is " + nodeResponse);

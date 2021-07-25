@@ -22,7 +22,7 @@ public class UIMain {
         System.out.println("BS IP = " + configs.getBSIP());
         System.out.println("BS Port = " + configs.getBSPort());
 
-        Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(), configs.getBSPort());
+        Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(), configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit());
         node.registerNode();
 
 

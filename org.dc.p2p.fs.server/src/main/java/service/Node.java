@@ -14,6 +14,9 @@ public class Node {
     private int serverPort;
     private int resultPort;
     private int bsServerPort;
+    private int soTimeout;
+    private int retryCount=0;
+    private int retryLimit=3;
     private String serverName;
     private String serverIP;
     private String resultIP;
@@ -25,23 +28,32 @@ public class Node {
     private final List<Neighbour> neighboursList = new ArrayList<>();
     private Communicator communicator = new Communicator();
 
-    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort){
+    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit){
         this.serverIP = ip;
         this.serverName = serverName;
         this.serverPort = port;
         this.bsServerIP = bsServerIP;
         this.bsServerPort = bsServerPort;
+        this.soTimeout = soTimeout;
+        this.retryLimit = retryLimit;
     }
 
     public void registerNode() throws Exception {
 
+        Neighbour[] neighbours = new Neighbour[0];
         String regMessage = "REG " + this.serverIP + " " + this.serverPort + " " + serverName;
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
         System.out.println(regMessage);
-        String bsResponse = service.sendToBS(regMessage, bsServerIP, bsServerPort);
-        Neighbour[] neighbours = processBSResponse(bsResponse);
+        String bsResponse = service.sendToBS(regMessage, bsServerIP, bsServerPort, soTimeout);
+        if (bsResponse != null){
+            neighbours = processBSResponse(bsResponse);
+        }else {
+            System.out.println("Error occured while connecting to Boostrap Server");
+        }
         if (neighbours.length != 0) {
-            processNeighbour(neighbours);
+            boolean neighbourConnectStatus = processNeighbour(neighbours);
+            if (neighbourConnectStatus == false);
+                unRegisterNode();
         }
         System.out.println(neighbours);
     }
@@ -50,8 +62,15 @@ public class Node {
 
         String unRegMessage = "UNREG " + serverIP + " " + serverPort + " " + serverName;
         unRegMessage = String.format("%04d", unRegMessage.length() + 5) + " " + unRegMessage;
-        String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort);
+        String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
         System.out.println(bsResponse);
+        retryCount += 1;
+        if (retryCount<=retryLimit){
+            System.out.println(retryCount + " Retry to register node");
+            registerNode();
+        }else {
+            System.out.println("Retry Limit reached");
+        }
     }
 
     public Neighbour[] processBSResponse(String message)
@@ -87,7 +106,9 @@ public class Node {
     public boolean processNeighbour(Neighbour[] neighbours) throws Exception {
         boolean connectSuccess = false;
         for (Neighbour neighbour : neighbours) {
-            connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort);
+            connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort, soTimeout);
+            if (connectSuccess==false)
+                return false;
         }
         return connectSuccess;
     }
