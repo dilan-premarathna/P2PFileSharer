@@ -10,11 +10,16 @@ import java.util.Properties;
  * @author janaka
  */
 public class ServerConfigurations {
-
     public static Properties prop = new Properties();
+    public static final Properties props = new Properties();
 
-    public String isConfigEnable(){
-        return getStringProperty("ENABLE_CONFIG");
+    public ServerConfigurations() {
+        try {
+            String propFileLocation = System.getProperty("propFileLocation");
+            props.load(new FileInputStream(propFileLocation));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getServerIP(){
@@ -36,7 +41,6 @@ public class ServerConfigurations {
     public String getFilesStorage(){
         return getStringProperty("FILE_STORAGE");
     }
-
 
     private int getIntegerProperty(String propertyName){
         try{
@@ -62,5 +66,4 @@ public class ServerConfigurations {
             return null;
         }
     }
-
 }

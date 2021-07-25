@@ -1,5 +1,6 @@
 package handler;
 
+import conf.ServerConfigurations;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +23,7 @@ public class Swagger2SpringBoot implements CommandLineRunner {
     }
 
     public static void main(String[] args) throws Exception {
+        ServerConfigurations configs = new ServerConfigurations();
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Swagger2SpringBoot.class);
         builder.headless(false);
         ConfigurableApplicationContext context = builder.run(args);
