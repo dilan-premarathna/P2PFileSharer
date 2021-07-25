@@ -3,6 +3,8 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import conf.ServerConfigurations;
+import service.Node;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -28,13 +30,14 @@ public class ServerHome {
  JPanel JPTop;
  JPanel JPServerInfo;
 
- private service.Node node = new service.Node();
+ private service.Node node;
 
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
    serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
           "Server Port :" + configs.getServerPort());
    try {
-       node.registerNode( configs.getServerIP(), configs.getServerPort(), configs.getBSIP(), configs.getBSPort());
+       node = new service.Node(configs.getServerIP(), configs.getServerPort(),configs.getServerName(), configs.getBSIP(), configs.getBSPort());
+       node.registerNode();
    } catch (Exception e) {
        e.printStackTrace();
    }
@@ -58,7 +61,7 @@ public class ServerHome {
   this.textPaneNeighbours = textPaneNeighbours;
  }
 
- public ServerHome(ServerConfigurations configs) {
+ public ServerHome(ServerConfigurations configs, Node node) {
 
   setServerIPServerPortTextPane(serverIPServerPortTextPane, configs);
   setTextPaneFiles(textPaneFiles, configs);

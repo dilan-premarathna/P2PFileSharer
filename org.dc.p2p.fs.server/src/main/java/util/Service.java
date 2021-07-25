@@ -22,7 +22,7 @@ public class Service {
         String bsResponse = new String(dpResponse.getData());
         System.out.println("result is " + bsResponse);
         socket.close();
-        return bsResponse;
+        return bsResponse.trim();
 
     }
 }

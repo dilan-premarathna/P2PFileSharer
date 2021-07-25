@@ -22,9 +22,12 @@ class Neighbour {
         return this.port;
     }
 
-    public boolean NeighbourConnect(List<Neighbour> neighbourList)  throws Exception {
+    public boolean NeighbourConnect(List<Neighbour> neighbourList, String clientIP, int clientPort)  throws Exception {
 
-        String joinMessage ="0027 JOIN 64.12.123.190 432";
+        String joinMessage =   "JOIN " + clientIP + " " + clientPort;
+        joinMessage = String.format("%04d", joinMessage.length() + 5) + " " + joinMessage;
+        System.out.println(joinMessage);
+
         InetAddress ia = InetAddress.getByName(getIp());
         byte[] messageBytes = joinMessage.getBytes();
         DatagramPacket packet = new DatagramPacket(messageBytes, messageBytes.length, ia, getPort());
@@ -37,7 +40,7 @@ class Neighbour {
         socket.receive(dpResponse);
 
         String nodeResponse = new String(dpResponse.getData());
-        System.out.println("result is " + nodeResponse);
+        System.out.println("neighbour response is " + nodeResponse);
         socket.close();
         return processNodeResponse(nodeResponse.trim(),neighbourList);
     }
@@ -49,20 +52,26 @@ class Neighbour {
         System.out.println(message);
         System.out.println("processNodeResponse: " + mes[2]);
 
-
+        boolean neighbourExist = false;
         if (mes[1].equals("JOINOK")) {
             if (mes[2].equals("0")) {
                 for (Neighbour neb:neighbourList) {
-                    if(neb.getIp() == this.getIp() && neb.getPort() == this.getPort())
-                        return false;
+                    if(neb.getIp() == this.getIp() && neb.getPort() == this.getPort()){
+                        neighbourExist =true;
+                        break;
+                    }
                 }
-                neighbourList.add(this);
+                if (neighbourExist==false)
+                    neighbourList.add(this);
 
             } else if (mes[2].equals("9999")) {
                 throw new Exception("failed, can’t register." + " initial join failed");
             }
+            return true;
+        }else {
+            return false;
         }
-        return true;
+
     }
 
 

@@ -24,10 +24,10 @@ public class Swagger2SpringBoot implements CommandLineRunner {
 
     public static void main(String[] args) throws Exception {
         ServerConfigurations configs = new ServerConfigurations();
-        UIMain uimain = new UIMain(configs);
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Swagger2SpringBoot.class);
         builder.headless(false);
         builder.run(args);
+        UIMain uimain = new UIMain(configs);
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {
