@@ -16,7 +16,7 @@ public class Node {
     private int bsServerPort;
     private int soTimeout;
     private int retryCount=0;
-    private int retryLimit=3;
+    private int retryLimit;
     private String serverName;
     private String serverIP;
     private String resultIP;
@@ -52,9 +52,13 @@ public class Node {
         }
         if (neighbours.length != 0) {
             boolean neighbourConnectStatus = processNeighbour(neighbours);
-            if (neighbourConnectStatus == false);
+            if (neighbourConnectStatus == false){
                 unRegisterNode();
+            } else{
+                retryCount =0;
+            }
         }
+
         System.out.println(neighbours);
     }
 
