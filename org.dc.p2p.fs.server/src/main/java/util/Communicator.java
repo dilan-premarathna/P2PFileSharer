@@ -9,14 +9,11 @@ import java.net.InetAddress;
 
 public class Communicator {
 
-    public void send(String message, String ip, int port, int send_port) throws IOException {
+    public void send(String message, String ip, int port) throws IOException {
 
         DatagramSocket socket;
 
-        if(send_port==-1)
-            socket = new DatagramSocket();
-        else
-            socket = new DatagramSocket(send_port);
+        socket = new DatagramSocket();
 
         InetAddress IPAddress = InetAddress.getByName(ip);
         byte[] toSend  = message.getBytes();
@@ -29,10 +26,7 @@ public class Communicator {
     public String receive(int port) throws IOException{
 
         DatagramSocket socket_re;
-        if(port==-1)
-            socket_re = new DatagramSocket();
-        else
-            socket_re = new DatagramSocket(port);
+        socket_re = new DatagramSocket(port);
 
         byte[] buf = new byte[65536];
         DatagramPacket incoming = new DatagramPacket(buf, buf.length);
