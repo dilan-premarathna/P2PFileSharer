@@ -44,12 +44,13 @@ public class ServerConfigurations {
     }
 
     private void fileListInitializer() {
-            String fileListPath = props.getProperty("fileNameList.location");
+        String fileListPath = props.getProperty("fileNameList.location");
         Charset charset = StandardCharsets.ISO_8859_1;
         try {
             List<String> result = Files.readAllLines(Paths.get(fileListPath), charset);
             int size = result.size();
-            for (int i=0;i<3;i++) {
+            int fileCountPerServer = ThreadLocalRandom.current().nextInt(3, 6);
+            for (int i=0;i<fileCountPerServer;i++) {
                 int randomNum = ThreadLocalRandom.current().nextInt(0, size);
                 randomNameList.add(result.get(randomNum));
                 result.remove(randomNum);
