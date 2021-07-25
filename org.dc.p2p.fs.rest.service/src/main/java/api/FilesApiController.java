@@ -44,7 +44,6 @@ public class FilesApiController implements FilesApi {
             schema=@Schema()) @Valid @RequestParam(value = "name", required = true) String name) {
 
         String accept = request.getHeader("Accept");
-        System.out.println(accept);
         if (accept != null && (accept.contains("multipart/form-data") || accept.contains("application/octet-stream"))) {
             try {
                 Resource resource = null;
