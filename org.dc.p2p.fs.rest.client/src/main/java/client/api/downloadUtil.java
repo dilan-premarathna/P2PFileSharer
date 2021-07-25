@@ -1,5 +1,6 @@
 package client.api;
 
+import client.handler.ApiClient;
 import client.handler.ApiException;
 import conf.ServerConfigurations;
 import org.slf4j.Logger;
@@ -20,7 +21,10 @@ public class downloadUtil {
     private static final Logger log = LoggerFactory.getLogger(downloadUtil.class);
 
     public static void downloadFile(String ip, String port, String fileName) {
-        FileDownloaderServiceApi apiInstance = new FileDownloaderServiceApi();
+        ApiClient client = new ApiClient();
+        String basePath = "http://" + ip + ":" + port + "/p2pfs";
+        client.setBasePath(basePath);
+        FileDownloaderServiceApi apiInstance = new FileDownloaderServiceApi(client);
         try {
             File file =  apiInstance.filesFileByNameGet(fileName);
             Path downloadedFile = Paths.get(ServerConfigurations.props.getProperty("file.downloadDir")).
