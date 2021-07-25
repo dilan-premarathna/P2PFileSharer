@@ -5,6 +5,7 @@ import gui.ServerHome;
 import service.Node;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,15 +22,16 @@ public class UIMain {
         System.out.println("BS IP = " + configs.getBSIP());
         System.out.println("BS Port = " + configs.getBSPort());
 
-        Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(),
-                configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort());
+        Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(), configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit());
         node.registerNode();
+
 
         List<String> fList = configs.getRandomNameList();
         System.out.println(fList);
         node.setFileList(fList);
 
         InitServerHomeUI(configs, node);
+
     }
 
     static void InitServerHomeUI(ServerConfigurations configs, Node node){
@@ -38,5 +40,8 @@ public class UIMain {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+
+
     }
+
 }

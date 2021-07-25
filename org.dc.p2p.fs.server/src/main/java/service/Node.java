@@ -11,7 +11,6 @@ import java.util.Arrays;
 
 public class Node {
 
-    private int serverPort;
     private final int serverPort;
     private int resultPort;
     private final int bsServerPort;
@@ -29,7 +28,8 @@ public class Node {
     public static List<Neighbour> neighboursList = new ArrayList<>();
     private final Result result = new Result();
 
-    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit, int restServicePort){
+    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit) {
+
         this.serverIP = ip;
         this.serverName = serverName;
         this.serverPort = port;
@@ -37,7 +37,6 @@ public class Node {
         this.bsServerPort = bsServerPort;
         this.soTimeout = soTimeout;
         this.retryLimit = retryLimit;
-        this.restServicePort = restServicePort;
     }
 
     public void registerNode() throws Exception {
