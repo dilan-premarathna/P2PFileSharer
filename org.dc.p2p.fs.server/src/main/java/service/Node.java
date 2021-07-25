@@ -13,6 +13,7 @@ import java.util.Arrays;
 public class Node {
 
     private int serverPort;
+    private int restServicePort;
     private int resultPort;
     private int bsServerPort;
     private int soTimeout;
@@ -30,7 +31,7 @@ public class Node {
     private Communicator communicator = new Communicator();
     private Result result = new Result();
 
-    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit){
+    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit, int restServicePort){
         this.serverIP = ip;
         this.serverName = serverName;
         this.serverPort = port;
@@ -38,6 +39,7 @@ public class Node {
         this.bsServerPort = bsServerPort;
         this.soTimeout = soTimeout;
         this.retryLimit = retryLimit;
+        this.restServicePort = restServicePort;
     }
 
     public void registerNode() throws Exception {

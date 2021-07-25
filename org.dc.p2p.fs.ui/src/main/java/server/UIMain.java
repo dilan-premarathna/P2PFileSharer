@@ -5,7 +5,6 @@ import gui.ServerHome;
 import service.Node;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,8 +21,11 @@ public class UIMain {
         System.out.println("BS IP = " + configs.getBSIP());
         System.out.println("BS Port = " + configs.getBSPort());
 
-        Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(), configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit());
+        Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(),
+                configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort());
         node.registerNode();
+        System.out.println("###############################################");
+        System.out.println(configs.getRestServicePort());
 
 
         List<String> fList = configs.getRandomNameList();
