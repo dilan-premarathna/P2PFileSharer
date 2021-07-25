@@ -79,7 +79,11 @@ public class ServerHome {
      ex.printStackTrace();
     }
 
-    System.out.println(node.getResultList());
+    for (String element :node.getResultList().getFileList() ) {
+     System.out.println(element);
+    }
+
+
 
     JFrame ResultFrame = new JFrame("SearchResult");
     ResultFrame.setContentPane(new SearchResult(searchString).SearchResult);

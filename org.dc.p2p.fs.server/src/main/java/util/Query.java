@@ -36,7 +36,7 @@ public class Query {
 
     public String getMsgString() {
         String msg = " SER " + initNodeIP + " " + initNodePort + " " + fName + " " + gethCount();
-        int length = msg.length();
+        int length = msg.length()+5;
         return String.format("%04d", length) + msg;
     }
 }
