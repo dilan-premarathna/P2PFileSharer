@@ -22,7 +22,6 @@ public class Server {
 
         InitServerHomeUI(configs);
 
-
     }
 
     static void InitServerHomeUI(ServerConfigurations configs){
