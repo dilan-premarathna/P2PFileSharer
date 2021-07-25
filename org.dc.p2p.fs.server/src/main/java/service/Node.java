@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class Node {
 
-    private int serverPort;
+    private int restServicePort;
     private final int serverPort;
     private int resultPort;
     private final int bsServerPort;
