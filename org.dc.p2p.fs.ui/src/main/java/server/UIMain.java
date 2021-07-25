@@ -24,16 +24,12 @@ public class UIMain {
         Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(),
                 configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort());
         node.registerNode();
-        System.out.println("###############################################");
-        System.out.println(configs.getRestServicePort());
-
 
         List<String> fList = configs.getRandomNameList();
         System.out.println(fList);
         node.setFileList(fList);
 
         InitServerHomeUI(configs, node);
-
     }
 
     static void InitServerHomeUI(ServerConfigurations configs, Node node){
@@ -42,8 +38,5 @@ public class UIMain {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-
-
     }
-
 }
