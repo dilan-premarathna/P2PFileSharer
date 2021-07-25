@@ -1,6 +1,5 @@
 package service;
 
-import util.Communicator;
 import util.Query;
 import util.Result;
 import util.Service;
@@ -27,7 +26,6 @@ public class Node {
     private final Service service = new Service();
     private List<String> fileList;
     public static List<Neighbour> neighboursList = new ArrayList<>();
-    private final Communicator communicator = new Communicator();
     private final Result result = new Result();
 
     public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit) {
@@ -142,7 +140,7 @@ public class Node {
             System.out.println(query.getMsgString());
 
             for (Neighbour neighbour : neighboursList) {
-                communicator.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
+                service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
             }
         }
         System.out.println("Searching done!");
@@ -158,14 +156,14 @@ public class Node {
                 String msg = " SEROK " + serverIP + " " + serverPort + " " + str + " " + "1";
                 int length = msg.length() + 5;
                 msg = String.format("%04d", length) + msg;
-                communicator.send(msg, msgList[2], Integer.parseInt(msgList[3]));
+                service.send(msg, msgList[2], Integer.parseInt(msgList[3]));
                 //send
             } else {
                 msgList[5] = String.valueOf(Integer.parseInt(msgList[5]) - 1);
                 if (!msgList[5].equals("0")) {
                     String joined = String.join(" ", msgList);
                     for (Neighbour neighbour : neighboursList) {
-                        communicator.send(joined, neighbour.getIp(), neighbour.getPort());
+                        service.send(joined, neighbour.getIp(), neighbour.getPort());
                     }
                 }
             }
@@ -179,7 +177,7 @@ public class Node {
 
     public void receiveFromNeighbours() throws IOException {
 
-        String recQuery = communicator.receive(serverPort);
+        String recQuery = service.receive(serverPort);
         decodeAndAct(recQuery);
     }
 
