@@ -9,19 +9,17 @@ import javax.swing.*;
  * @author janaka
  */
 
-public class Server {
+public class UIMain {
 
-    public static void main(String[] args) {
+    public UIMain(ServerConfigurations configs) {
 
         System.out.println("Starting the server ...");
-        ServerConfigurations configs = new ServerConfigurations();
         System.out.println("Server IP = "+ configs.getServerIP());
         System.out.println("Server Port = " + configs.getServerPort());
         System.out.println("BS IP = " + configs.getBSIP());
         System.out.println("BS Port = " + configs.getBSPort());
 
         InitServerHomeUI(configs);
-
 
     }
 

@@ -16,13 +16,13 @@ public class Service {
         socket.send(packet);
 
         byte[] b1 = new byte[2048];
-        DatagramPacket dp1 = new DatagramPacket(b1, b1.length);
-        socket.receive(dp1);
+        DatagramPacket dpResponse = new DatagramPacket(b1, b1.length);
+        socket.receive(dpResponse);
 
-        String str = new String(dp1.getData());
-        System.out.println("result is " + str);
+        String bsResponse = new String(dpResponse.getData());
+        System.out.println("result is " + bsResponse);
         socket.close();
-        return str;
+        return bsResponse;
 
     }
 }
