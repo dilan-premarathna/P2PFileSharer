@@ -87,6 +87,8 @@ public class ServerConfigurations {
 
     public int getRetryLimit(){return getIntegerProperty("RETRY_LIMIT");}
 
+    public int getRestServicePort() { return  getIntegerProperty("REST_SREVICE_PORT"); }
+
     private int getIntegerProperty(String propertyName){
         try{
             String propFileLocation = System.getProperty("propFileLocation");

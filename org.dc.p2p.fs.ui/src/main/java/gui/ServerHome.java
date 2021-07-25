@@ -3,6 +3,7 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import conf.ServerConfigurations;
+import service.Neighbour;
 import service.Node;
 
 import javax.swing.*;
@@ -30,7 +31,7 @@ public class ServerHome {
  JPanel JPTop;
  JPanel JPServerInfo;
 
- private service.Node node;
+ private Node node;
 
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
   serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
@@ -51,8 +52,12 @@ public class ServerHome {
   textPaneFiles.setText(files);
  }
 
- public void setTextPaneNeighbours(JTextPane textPaneNeighbours) {
-  this.textPaneNeighbours = textPaneNeighbours;
+ public void setTextPaneNeighbours(JTextPane textPaneNeighbours, Node node) {
+  String str = "";
+  for (Neighbour neighbour : node.getNeighboursList()) {
+   str += " IP " + neighbour.getIp() + " PORT " + neighbour.getPort() + "\n";
+  }
+  textPaneNeighbours.setText(str);
  }
 
  public ServerHome(ServerConfigurations configs, Node node) {
@@ -60,6 +65,7 @@ public class ServerHome {
   this.node = node;
   setServerIPServerPortTextPane(serverIPServerPortTextPane, configs);
   setTextPaneFiles(textPaneFiles, configs);
+  setTextPaneNeighbours(textPaneNeighbours, node);
   searchButton.addActionListener(new ActionListener() {
    @Override
    public void actionPerformed(ActionEvent e) {
