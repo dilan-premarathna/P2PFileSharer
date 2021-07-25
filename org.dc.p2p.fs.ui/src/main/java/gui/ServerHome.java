@@ -35,12 +35,6 @@ public class ServerHome {
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
    serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
           "Server Port :" + configs.getServerPort());
-   try {
-       node = new service.Node(configs.getServerIP(), configs.getServerPort(),configs.getServerName(), configs.getBSIP(), configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit());
-       node.registerNode();
-   } catch (Exception e) {
-       e.printStackTrace();
-   }
  }
 
  public void setTextPaneFiles(JTextPane textPaneFiles, ServerConfigurations config) {
@@ -63,6 +57,7 @@ public class ServerHome {
 
  public ServerHome(ServerConfigurations configs, Node node) {
 
+  this.node = node;
   setServerIPServerPortTextPane(serverIPServerPortTextPane, configs);
   setTextPaneFiles(textPaneFiles, configs);
   searchButton.addActionListener(new ActionListener() {
