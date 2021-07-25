@@ -89,7 +89,11 @@ public class ServerConfigurations {
 
     private int getIntegerProperty(String propertyName){
         try{
-            prop.load(new FileInputStream("org.dc.p2p.fs.ui/src/main/resources/config.properties"));
+            String propFileLocation = System.getProperty("propFileLocation");
+            if(propFileLocation==null){
+                propFileLocation = "org.dc.p2p.fs.ui/src/main/resources/config.properties";
+            }
+            prop.load(new FileInputStream(propFileLocation));
             return Integer.valueOf(prop.getProperty(propertyName));
         }catch(ClassCastException ex){
             //System.out.println(ex.getMessage());
@@ -104,7 +108,11 @@ public class ServerConfigurations {
 
     public String getStringProperty(String propertyName){
         try{
-            prop.load(new FileInputStream("org.dc.p2p.fs.ui/src/main/resources/config.properties"));
+            String propFileLocation = System.getProperty("propFileLocation");
+            if(propFileLocation==null){
+                propFileLocation = "org.dc.p2p.fs.ui/src/main/resources/config.properties";
+            }
+            prop.load(new FileInputStream(propFileLocation));
             return prop.getProperty(propertyName);
         }catch(IOException ex){
             System.out.println(ex.getMessage());
