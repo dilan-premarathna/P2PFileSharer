@@ -2,9 +2,18 @@ package conf;
 
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * @author janaka
@@ -12,11 +21,33 @@ import java.util.Properties;
 public class ServerConfigurations {
     public static Properties prop = new Properties();
     public static final Properties props = new Properties();
+    public static final List<String> randomNameList = new ArrayList<>();
+
+    private static final Logger logger = LoggerFactory.getLogger(ServerConfigurations.class);
 
     public ServerConfigurations() {
         try {
             String propFileLocation = System.getProperty("propFileLocation");
             props.load(new FileInputStream(propFileLocation));
+            fileListInitializer();
+            logger.info("Random File names for the App instance is " + randomNameList.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fileListInitializer() {
+            String fileListPath = props.getProperty("fileNameList.location");
+        Charset charset = StandardCharsets.ISO_8859_1;
+        try {
+            List<String> result = Files.readAllLines(Paths.get(fileListPath), charset);
+            int size = result.size();
+            for (int i=0;i<3;i++) {
+                int randomNum = ThreadLocalRandom.current().nextInt(0, size);
+                randomNameList.add(result.get(randomNum));
+                result.remove(randomNum);
+                size--;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
