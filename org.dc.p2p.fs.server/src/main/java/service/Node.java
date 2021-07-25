@@ -21,7 +21,7 @@ public class Node {
     private String[] resultList;
     private Query query;
     private Service service = new Service();
-    private ArrayList<String> fileList = new ArrayList<>();
+    private List<String> fileList;
     private final List<Neighbour> neighboursList = new ArrayList<>();
     private Communicator communicator = new Communicator();
 
@@ -97,16 +97,16 @@ public class Node {
         StringBuilder fileStr = new StringBuilder();
         for (String element : fileList
         ) {
-            if (element.contains(fName)) fileStr.append(element).append(" ");
+            if (element.contains(fName)) fileStr.append(element).append("#");
 
         }
         return fileStr.toString();
     }
 
     public void searchFiles(String fName) throws IOException {
-
-        if (isFilePresent(fName).length() > 0) {
-            resultList = fName.split(" ");
+        String str = isFilePresent(fName);
+        if (str.length() > 0) {
+            resultList = str.split("#");
 
         } else {
             query = new Query(this.serverIP, this.serverPort, fName, 5);
@@ -167,5 +167,13 @@ public class Node {
     public int getResultPort() {
 
         return resultPort;
+    }
+
+    public void setFileList(List<String> fList) {
+        fileList = fList;
+    }
+
+    public List<Neighbour> getNeighboursList() {
+        return neighboursList;
     }
 }
