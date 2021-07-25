@@ -1,10 +1,10 @@
 package handler;
 
+import conf.ServerConfigurations;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 import springfox.documentation.oas.annotations.EnableOpenApi;
@@ -22,9 +22,10 @@ public class Swagger2SpringBoot implements CommandLineRunner {
     }
 
     public static void main(String[] args) throws Exception {
+        ServerConfigurations configs = new ServerConfigurations();
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Swagger2SpringBoot.class);
         builder.headless(false);
-        ConfigurableApplicationContext context = builder.run(args);
+        builder.run(args);
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {

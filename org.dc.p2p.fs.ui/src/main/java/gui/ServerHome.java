@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.File;
 
 /**
  * @author janaka
@@ -39,8 +40,18 @@ public class ServerHome {
    }
  }
 
- public void setTextPaneFiles(JTextPane textPaneFiles) {
-  this.textPaneFiles = textPaneFiles;
+ public void setTextPaneFiles(JTextPane textPaneFiles, ServerConfigurations config) {
+  File f = new File(config.getFilesStorage());
+  String[] filelist = f.list();
+  String files = "";
+  for (int i = 0; i < filelist.length; i++) {
+   files += filelist[i] + "\n";
+  }
+  String[] randomfilelist = config.getRandomNameList().toArray(new String[0]);
+  for (int i = 0; i < randomfilelist.length; i++) {
+   files += randomfilelist[i] + "\n";
+  }
+  textPaneFiles.setText(files);
  }
 
  public void setTextPaneNeighbours(JTextPane textPaneNeighbours) {
@@ -50,6 +61,7 @@ public class ServerHome {
  public ServerHome(ServerConfigurations configs) {
 
   setServerIPServerPortTextPane(serverIPServerPortTextPane, configs);
+  setTextPaneFiles(textPaneFiles, configs);
   searchButton.addActionListener(new ActionListener() {
    @Override
    public void actionPerformed(ActionEvent e) {
