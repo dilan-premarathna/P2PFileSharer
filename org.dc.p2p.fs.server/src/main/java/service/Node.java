@@ -1,6 +1,5 @@
 package service;
 
-import util.Communicator;
 import util.Query;
 import util.Result;
 import util.Service;
@@ -12,25 +11,25 @@ import java.util.Arrays;
 
 public class Node {
 
-    private int serverPort;
+    private final int serverPort;
     private int resultPort;
-    private int bsServerPort;
-    private int soTimeout;
-    private int retryCount=0;
-    private int retryLimit=3;
-    private String serverName;
-    private String serverIP;
+    private final int bsServerPort;
+    private final int soTimeout;
+    private int retryCount;
+    private final int retryLimit;
+    private final String serverName;
+    private final String serverIP;
     private String resultIP;
-    private String bsServerIP;
+    private final String bsServerIP;
     private String[] resultList;
     private Query query;
-    private Service service = new Service();
+    private final Service service = new Service();
     private List<String> fileList;
-    private final List<Neighbour> neighboursList = new ArrayList<>();
-    private Communicator communicator = new Communicator();
-    private Result result = new Result();
+    public static List<Neighbour> neighboursList = new ArrayList<>();
+    private final Result result = new Result();
 
-    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit){
+    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit) {
+
         this.serverIP = ip;
         this.serverName = serverName;
         this.serverPort = port;
@@ -47,17 +46,21 @@ public class Node {
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
         System.out.println(regMessage);
         String bsResponse = service.sendToBS(regMessage, bsServerIP, bsServerPort, soTimeout);
-        if (bsResponse != null){
+        if (bsResponse != null) {
             neighbours = processBSResponse(bsResponse);
-        }else {
-            System.out.println("Error occured while connecting to Boostrap Server");
+        } else {
+            System.out.println("Error occurred while connecting to Boostrap Server");
         }
         if (neighbours.length != 0) {
             boolean neighbourConnectStatus = processNeighbour(neighbours);
-            if (neighbourConnectStatus == false);
+            if (!neighbourConnectStatus) {
                 unRegisterNode();
+            } else {
+                retryCount = 0;
+            }
         }
-        System.out.println(neighbours);
+
+        System.out.println(neighbours.toString());
     }
 
     public void unRegisterNode() throws Exception {
@@ -67,10 +70,10 @@ public class Node {
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
         System.out.println(bsResponse);
         retryCount += 1;
-        if (retryCount<=retryLimit){
+        if (retryCount <= retryLimit) {
             System.out.println(retryCount + " Retry to register node");
             registerNode();
-        }else {
+        } else {
             System.out.println("Retry Limit reached");
         }
     }
@@ -106,10 +109,11 @@ public class Node {
     }
 
     public boolean processNeighbour(Neighbour[] neighbours) throws Exception {
+
         boolean connectSuccess = false;
         for (Neighbour neighbour : neighbours) {
             connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort, soTimeout);
-            if (connectSuccess==false)
+            if (!connectSuccess)
                 return false;
         }
         return connectSuccess;
@@ -126,6 +130,7 @@ public class Node {
     }
 
     public void searchFiles(String fName) throws IOException {
+
         String str = isFilePresent(fName);
         if (str.length() > 0) {
             resultList = str.split("#");
@@ -135,7 +140,7 @@ public class Node {
             System.out.println(query.getMsgString());
 
             for (Neighbour neighbour : neighboursList) {
-                communicator.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
+                service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
             }
         }
         System.out.println("Searching done!");
@@ -149,16 +154,16 @@ public class Node {
             String str = isFilePresent(msgList[4]);
             if (str.length() > 0) {
                 String msg = " SEROK " + serverIP + " " + serverPort + " " + str + " " + "1";
-                int length = msg.length()+5;
+                int length = msg.length() + 5;
                 msg = String.format("%04d", length) + msg;
-                communicator.send(msg, msgList[2], Integer.parseInt(msgList[3]));
+                service.send(msg, msgList[2], Integer.parseInt(msgList[3]));
                 //send
             } else {
                 msgList[5] = String.valueOf(Integer.parseInt(msgList[5]) - 1);
                 if (!msgList[5].equals("0")) {
                     String joined = String.join(" ", msgList);
                     for (Neighbour neighbour : neighboursList) {
-                        communicator.send(joined, neighbour.getIp(), neighbour.getPort());
+                        service.send(joined, neighbour.getIp(), neighbour.getPort());
                     }
                 }
             }
@@ -172,11 +177,12 @@ public class Node {
 
     public void receiveFromNeighbours() throws IOException {
 
-        String recQuery = communicator.receive(serverPort);
+        String recQuery = service.receive(serverPort);
         decodeAndAct(recQuery);
     }
 
     public Result getResultList() {
+
         result.setResult(resultIP, resultPort, resultList);
 
         return result;
@@ -193,10 +199,12 @@ public class Node {
     }
 
     public void setFileList(List<String> fList) {
+
         fileList = fList;
     }
 
     public List<Neighbour> getNeighboursList() {
+
         return neighboursList;
     }
 }
