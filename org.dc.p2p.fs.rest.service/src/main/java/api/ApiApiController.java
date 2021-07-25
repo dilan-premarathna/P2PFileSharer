@@ -31,6 +31,6 @@ public class ApiApiController implements ApiApi {
             response.status("Server Up");
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
-        return new ResponseEntity<HealthCheckResponseDTO>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
