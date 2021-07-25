@@ -25,7 +25,7 @@ public class Node {
     private Query query;
     private Service service = new Service();
     private List<String> fileList;
-    private final List<Neighbour> neighboursList = new ArrayList<>();
+    public static List<Neighbour> neighboursList = new ArrayList<>();
     private Communicator communicator = new Communicator();
 
     public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit){
