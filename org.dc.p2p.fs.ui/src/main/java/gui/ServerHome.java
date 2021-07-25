@@ -3,6 +3,8 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import conf.ServerConfigurations;
+import service.Node;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -59,7 +61,7 @@ public class ServerHome {
   this.textPaneNeighbours = textPaneNeighbours;
  }
 
- public ServerHome(ServerConfigurations configs) {
+ public ServerHome(ServerConfigurations configs, Node node) {
 
   setServerIPServerPortTextPane(serverIPServerPortTextPane, configs);
   setTextPaneFiles(textPaneFiles, configs);
