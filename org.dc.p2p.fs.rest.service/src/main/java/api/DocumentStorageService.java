@@ -18,11 +18,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class DocumentStorageService {
 
-    @Value("${fileDownload.tempDir}")
-    private String tempDirectory;
-
     public Resource getFileAsResource(String name) throws MalformedURLException {
-        File file = new File(tempDirectory + "/" + name);
+        File file = new File(ServerConfigurations.props.getProperty("fileDownload.tempDir") + "/" + name);
         RandomAccessFile rafile;
         try {
             rafile = new RandomAccessFile(file, "rw");
@@ -34,7 +31,7 @@ public class DocumentStorageService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Path filePath = Paths.get(tempDirectory).toAbsolutePath().normalize();
+        Path filePath = Paths.get(ServerConfigurations.props.getProperty("fileDownload.tempDir")).toAbsolutePath().normalize();
         Path targetLocation = filePath.resolve(name);
         return new UrlResource(targetLocation.toUri());
 
