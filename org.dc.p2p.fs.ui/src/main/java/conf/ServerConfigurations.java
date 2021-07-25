@@ -80,6 +80,8 @@ public class ServerConfigurations {
         return getStringProperty("FILE_STORAGE");
     }
 
+    public String getServerName(){return getStringProperty("SERVER_NAME");}
+
     private int getIntegerProperty(String propertyName){
         try{
             prop.load(new FileInputStream("org.dc.p2p.fs.ui/src/main/resources/config.properties"));

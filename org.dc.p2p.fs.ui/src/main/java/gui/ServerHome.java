@@ -28,13 +28,14 @@ public class ServerHome {
  JPanel JPTop;
  JPanel JPServerInfo;
 
- private service.Node node = new service.Node();
+ private service.Node node;
 
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
    serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
           "Server Port :" + configs.getServerPort());
    try {
-       node.registerNode( configs.getServerIP(), configs.getServerPort(), configs.getBSIP(), configs.getBSPort());
+       node = new service.Node(configs.getServerIP(), configs.getServerPort(),configs.getServerName(), configs.getBSIP(), configs.getBSPort());
+       node.registerNode();
    } catch (Exception e) {
        e.printStackTrace();
    }

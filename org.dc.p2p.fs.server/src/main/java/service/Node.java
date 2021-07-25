@@ -3,6 +3,7 @@ package service;
 import util.Communicator;
 import util.Query;
 import util.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -10,29 +11,35 @@ import java.util.Arrays;
 
 public class Node {
 
-    private String name;
-    private String bsServerIP = "127.0.0.1";
-    private int bsServerPort = 55555;
-    private Service service = new Service();
-    private final List<Neighbour> neighboursList = new ArrayList<>();
-    private String ip;
-    private String resultIP;
+    private int serverPort;
     private int resultPort;
-    private int clientPort;
-    private ArrayList<String> fileList = new ArrayList<>();
+    private int bsServerPort;
+    private String serverName;
+    private String serverIP;
+    private String resultIP;
+    private String bsServerIP;
     private String[] resultList;
-    private ArrayList<Neighbour> neighbourArrayList = new ArrayList<>();
-    private Communicator communicator = new Communicator();
     private Query query;
+    private Service service = new Service();
+    private ArrayList<String> fileList = new ArrayList<>();
+    private final List<Neighbour> neighboursList = new ArrayList<>();
+    private Communicator communicator = new Communicator();
 
-    public void registerNode(String ip, int port, String bsServerIP, int bsServerPort) throws Exception {
-        this.ip = ip;
-        this.clientPort = port;
+    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort){
+        this.serverIP = ip;
+        this.serverName = serverName;
+        this.serverPort = port;
         this.bsServerIP = bsServerIP;
         this.bsServerPort = bsServerPort;
-        String regMessage = "0036 REG 127.0.0.1 5000 client1";
+    }
+
+    public void registerNode() throws Exception {
+
+        String regMessage = "REG " + this.serverIP + " " + this.serverPort + " " + serverName;
+        regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
+        System.out.println(regMessage);
         String bsResponse = service.sendToBS(regMessage, bsServerIP, bsServerPort);
-        Neighbour[] neighbours = processBSResponse(bsResponse.trim());
+        Neighbour[] neighbours = processBSResponse(bsResponse);
         if (neighbours.length != 0) {
             processNeighbour(neighbours);
         }
@@ -41,9 +48,10 @@ public class Node {
 
     public void unRegisterNode() throws Exception {
 
-        Neighbour[] neighbours = null;
-        String regMessage = "0036 REG 129.82.123.45 5001 1234abcd";
-        service.sendToBS(regMessage, bsServerIP, bsServerPort);
+        String unRegMessage = "UNREG " + serverIP + " " + serverPort + " " + serverName;
+        unRegMessage = String.format("%04d", unRegMessage.length() + 5) + " " + unRegMessage;
+        String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort);
+        System.out.println(bsResponse);
     }
 
     public Neighbour[] processBSResponse(String message)
@@ -76,33 +84,35 @@ public class Node {
         return null;
     }
 
-    public void processNeighbour(Neighbour[] neighbours) throws Exception {
-
+    public boolean processNeighbour(Neighbour[] neighbours) throws Exception {
+        boolean connectSuccess = false;
         for (Neighbour neighbour : neighbours) {
-            neighbour.NeighbourConnect(neighboursList);
+            connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort);
         }
+        return connectSuccess;
     }
 
     private String isFilePresent(String fName) {
+
         StringBuilder fileStr = new StringBuilder();
-        for (String element: fileList
-             ) {
-            if(element.contains(fName)) fileStr.append(element).append(" ");
-            
+        for (String element : fileList
+        ) {
+            if (element.contains(fName)) fileStr.append(element).append(" ");
+
         }
         return fileStr.toString();
     }
 
     public void searchFiles(String fName) throws IOException {
 
-        if(isFilePresent(fName).length()>0) {
+        if (isFilePresent(fName).length() > 0) {
             resultList = fName.split(" ");
 
         } else {
-            query = new Query(this.ip, this.clientPort, fName, 5);
+            query = new Query(this.serverIP, this.serverPort, fName, 5);
             System.out.println(query.getMsgString());
 
-            for (Neighbour neighbour : neighbourArrayList) {
+            for (Neighbour neighbour : neighboursList) {
                 communicator.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort(), 6000);
             }
         }
@@ -110,12 +120,13 @@ public class Node {
     }
 
     private void decodeAndAct(String recQuery) throws IOException {
+
         String[] msgList = recQuery.split(" ");
 
         if (msgList[1].equals("SER")) {
             String str = isFilePresent(msgList[4]);
             if (str.length() > 0) {
-                String msg = " SEROK " + ip + " " + clientPort + " " + str + " " + "1";
+                String msg = " SEROK " + serverIP + " " + serverPort + " " + str + " " + "1";
                 int length = msg.length();
                 msg = String.format("%04d", length) + msg;
                 communicator.send(msg, msgList[2], Integer.parseInt(msgList[3]), 6000);
@@ -124,7 +135,7 @@ public class Node {
                 msgList[5] = String.valueOf(Integer.parseInt(msgList[5]) - 1);
                 if (!msgList[5].equals("0")) {
                     String joined = String.join(" ", msgList);
-                    for (Neighbour neighbour : neighbourArrayList) {
+                    for (Neighbour neighbour : neighboursList) {
                         communicator.send(joined, neighbour.getIp(), neighbour.getPort(), 6000);
                     }
                 }
@@ -138,19 +149,23 @@ public class Node {
     }
 
     public void receiveFromNeighbours() throws IOException {
-        String recQuery = communicator.receive(clientPort);
+
+        String recQuery = communicator.receive(serverPort);
         decodeAndAct(recQuery);
     }
 
     public String[] getResultList() {
+
         return resultList;
     }
 
     public String getResultIP() {
+
         return resultIP;
     }
 
     public int getResultPort() {
+
         return resultPort;
     }
 }
