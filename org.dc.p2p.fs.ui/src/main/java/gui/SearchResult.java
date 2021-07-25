@@ -3,6 +3,7 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import service.Node;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,13 +14,28 @@ import java.awt.*;
 public class SearchResult {
     public JPanel SearchResult;
     private JLabel HomeButton;
-    private JTextPane textPane1;
+
+    public void setSearchResults(String searchResults) {
+        SearchResults.setText(searchResults);
+    }
+
+    private JTextPane SearchResults;
+
+    public void setSearchString(String searchString) {
+        SearchString.setText("Search Result for : " + searchString);
+    }
+
     private JTextPane SearchString;
     private JPanel JPSearchPanel;
     private JPanel JPSearchResultSet;
 
-    public SearchResult(String searchtext) {
-        SearchString.setText("Search Result for : " + searchtext);
+    public SearchResult() {
+
+    }
+
+    public void init(Node node, String searchtext, String resultText) {
+        setSearchString(searchtext);
+        setSearchResults(resultText);
     }
 
     {
@@ -46,7 +62,7 @@ public class SearchResult {
         final Spacer spacer1 = new Spacer();
         SearchResult.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         JPSearchPanel = new JPanel();
-        JPSearchPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        JPSearchPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 10, 0, 10), -1, -1));
         SearchResult.add(JPSearchPanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         JPSearchPanel.add(spacer2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -54,12 +70,12 @@ public class SearchResult {
         JPSearchPanel.add(spacer3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         SearchString = new JTextPane();
         SearchString.setText("Search Result for : ");
-        JPSearchPanel.add(SearchString, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        JPSearchPanel.add(SearchString, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 3), null, 0, false));
         JPSearchResultSet = new JPanel();
-        JPSearchResultSet.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        JPSearchResultSet.setLayout(new GridLayoutManager(3, 1, new Insets(0, 10, 0, 10), -1, -1));
         SearchResult.add(JPSearchResultSet, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        textPane1 = new JTextPane();
-        JPSearchResultSet.add(textPane1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        SearchResults = new JTextPane();
+        JPSearchResultSet.add(SearchResults, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         final Spacer spacer4 = new Spacer();
         JPSearchResultSet.add(spacer4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer5 = new Spacer();
@@ -72,5 +88,4 @@ public class SearchResult {
     public JComponent $$$getRootComponent$$$() {
         return SearchResult;
     }
-
 }

@@ -33,7 +33,7 @@ public class ServerHome {
  private service.Node node;
 
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
-   serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
+  serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
           "Server Port :" + configs.getServerPort());
  }
 
@@ -73,15 +73,17 @@ public class ServerHome {
     } catch (IOException ex) {
      ex.printStackTrace();
     }
-
-    for (String element :node.getResultList().getFileList() ) {
+    String resultText = "";
+    for (String element : node.getResultList().getFileList()) {
      System.out.println(element);
+     resultText += element + "\n";
     }
 
-
+    SearchResult searchResult = new SearchResult();
+    searchResult.init(node, searchString, resultText);
 
     JFrame ResultFrame = new JFrame("SearchResult");
-    ResultFrame.setContentPane(new SearchResult(searchString).SearchResult);
+    ResultFrame.setContentPane(searchResult.SearchResult);
     ResultFrame.pack();
     ResultFrame.setVisible(true);
 
@@ -115,7 +117,7 @@ public class ServerHome {
   searchButton.setText("Search");
   ServerMain.add(searchButton, new GridConstraints(2, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(200, -1), 0, false));
   JPFiles = new JPanel();
-  JPFiles.setLayout(new GridLayoutManager(2, 1, new Insets(0, 5, 0, 0), -1, -1));
+  JPFiles.setLayout(new GridLayoutManager(2, 1, new Insets(0, 10, 0, 0), -1, -1));
   JPFiles.setForeground(new Color(-3553335));
   ServerMain.add(JPFiles, new GridConstraints(4, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
   final JLabel label1 = new JLabel();
@@ -126,7 +128,7 @@ public class ServerHome {
   textField1 = new JTextField();
   ServerMain.add(textField1, new GridConstraints(1, 0, 1, 6, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
   JPNeighbours = new JPanel();
-  JPNeighbours.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 5), -1, -1));
+  JPNeighbours.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 10), -1, -1));
   ServerMain.add(JPNeighbours, new GridConstraints(4, 4, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
   final JLabel label2 = new JLabel();
   label2.setText("Neighbours");
@@ -140,7 +142,7 @@ public class ServerHome {
   JPTop.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
   ServerMain.add(JPTop, new GridConstraints(0, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
   JPServerInfo = new JPanel();
-  JPServerInfo.setLayout(new GridLayoutManager(1, 1, new Insets(0, 5, 0, 0), -1, -1));
+  JPServerInfo.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 0, 10), -1, -1));
   ServerMain.add(JPServerInfo, new GridConstraints(3, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, new Dimension(-1, 50), 0, false));
   serverIPServerPortTextPane = new JTextPane();
   serverIPServerPortTextPane.setText("Server IP :\nServer Port : \n");
