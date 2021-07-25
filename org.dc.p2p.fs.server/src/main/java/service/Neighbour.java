@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
-class Neighbour {
+public class Neighbour {
 
     private String ip;
     private int port;
