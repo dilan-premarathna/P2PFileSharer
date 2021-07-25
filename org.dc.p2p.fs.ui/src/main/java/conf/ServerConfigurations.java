@@ -25,9 +25,16 @@ public class ServerConfigurations {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerConfigurations.class);
 
+    public static List<String> getRandomNameList() {
+        return randomNameList;
+    }
+
     public ServerConfigurations() {
         try {
             String propFileLocation = System.getProperty("propFileLocation");
+            if(propFileLocation==null){
+                propFileLocation = "org.dc.p2p.fs.ui/src/main/resources/config.properties";
+            }
             props.load(new FileInputStream(propFileLocation));
             fileListInitializer();
             logger.info("Random File names for the App instance is " + randomNameList.toString());
