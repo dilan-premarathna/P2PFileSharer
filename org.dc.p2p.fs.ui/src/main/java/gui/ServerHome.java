@@ -33,7 +33,7 @@ public class ServerHome {
  private service.Node node;
 
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
-   serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
+  serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
           "Server Port :" + configs.getServerPort());
  }
 
@@ -73,15 +73,17 @@ public class ServerHome {
     } catch (IOException ex) {
      ex.printStackTrace();
     }
-
-    for (String element :node.getResultList().getFileList() ) {
+    String resultText = "";
+    for (String element : node.getResultList().getFileList()) {
      System.out.println(element);
+     resultText += element + "\n";
     }
 
-
+    SearchResult searchResult = new SearchResult();
+    searchResult.init(node, searchString, resultText);
 
     JFrame ResultFrame = new JFrame("SearchResult");
-    ResultFrame.setContentPane(new SearchResult(searchString).SearchResult);
+    ResultFrame.setContentPane(searchResult.SearchResult);
     ResultFrame.pack();
     ResultFrame.setVisible(true);
 
