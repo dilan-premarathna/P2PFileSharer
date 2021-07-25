@@ -39,6 +39,10 @@ public class ServerHome {
   for (int i = 0; i < filelist.length; i++) {
    files += filelist[i] + "\n";
   }
+  String[] randomfilelist = config.getRandomNameList().toArray(new String[0]);
+  for (int i = 0; i < randomfilelist.length; i++) {
+   files += randomfilelist[i] + "\n";
+  }
   textPaneFiles.setText(files);
  }
 
