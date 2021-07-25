@@ -10,6 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>org.dc.p2p.fs.server</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>
