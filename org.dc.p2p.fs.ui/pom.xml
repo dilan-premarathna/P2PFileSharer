@@ -28,6 +28,16 @@
             <artifactId>forms_rt</artifactId>
             <version>6.0.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.dc</groupId>
+            <artifactId>org.dc.p2p.fs.server</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -91,7 +101,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>server.Server</mainClass>
+                            <mainClass>server.UIMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

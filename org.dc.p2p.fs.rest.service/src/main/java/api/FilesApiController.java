@@ -1,6 +1,8 @@
 package api;
 
 import model.ApiResponseDTO;
+import org.apache.catalina.connector.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +16,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -42,24 +46,42 @@ public class FilesApiController implements FilesApi {
 
     private final HttpServletRequest request;
 
+    @Autowired
+    private DocumentStorageService docStorageService;
+
     @org.springframework.beans.factory.annotation.Autowired
     public FilesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
     }
 
-    public ResponseEntity<Resource> filesFileByNameGet(@NotNull @Parameter(in = ParameterIn.QUERY, description = "file name that need to be downloaded from the peer" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "name", required = true) String name) {
+    public ResponseEntity<Resource> filesFileByNameGet(@NotNull @Parameter(in = ParameterIn.QUERY,
+            description = "file name that need to be downloaded from the peer" ,required=true,
+            schema=@Schema()) @Valid @RequestParam(value = "name", required = true) String name) {
+
         String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        if (accept != null && (accept.contains("multipart/form-data") || accept.contains("application/octet-stream"))) {
             try {
-                return new ResponseEntity<Resource>(objectMapper.readValue("\"\"", Resource.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
+                Resource resource = null;
+                if (name != null && !name.isEmpty()) {
+                    try {
+                        resource = docStorageService.getFileAsResource(name);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return ResponseEntity.ok().contentType(MediaType.parseMediaType(accept))
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
+                }
+//                ApiResponseDTO response = new ApiResponseDTO();
+//                response.code(400);
+//                response.message("bad request");
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                return ResponseEntity.status(Response.SC_BAD_REQUEST).build();
+            } catch (Exception e) {
+                log.error("Couldn't serialize response for content type multipart/form-data or application/octet-stream", e);
                 return new ResponseEntity<Resource>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
-        return new ResponseEntity<Resource>(HttpStatus.NOT_IMPLEMENTED);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-
 }

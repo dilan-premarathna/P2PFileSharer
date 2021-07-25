@@ -8,6 +8,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.File;
 
 /**
  * @author janaka
@@ -26,13 +28,30 @@ public class ServerHome {
  JPanel JPTop;
  JPanel JPServerInfo;
 
+ private service.Node node = new service.Node();
+
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
-  serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
+   serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
           "Server Port :" + configs.getServerPort());
+   try {
+       node.registerNode( configs.getServerIP(), configs.getServerPort(), configs.getBSIP(), configs.getBSPort());
+   } catch (Exception e) {
+       e.printStackTrace();
+   }
  }
 
- public void setTextPaneFiles(JTextPane textPaneFiles) {
-  this.textPaneFiles = textPaneFiles;
+ public void setTextPaneFiles(JTextPane textPaneFiles, ServerConfigurations config) {
+  File f = new File(config.getFilesStorage());
+  String[] filelist = f.list();
+  String files = "";
+  for (int i = 0; i < filelist.length; i++) {
+   files += filelist[i] + "\n";
+  }
+  String[] randomfilelist = config.getRandomNameList().toArray(new String[0]);
+  for (int i = 0; i < randomfilelist.length; i++) {
+   files += randomfilelist[i] + "\n";
+  }
+  textPaneFiles.setText(files);
  }
 
  public void setTextPaneNeighbours(JTextPane textPaneNeighbours) {
@@ -42,6 +61,7 @@ public class ServerHome {
  public ServerHome(ServerConfigurations configs) {
 
   setServerIPServerPortTextPane(serverIPServerPortTextPane, configs);
+  setTextPaneFiles(textPaneFiles, configs);
   searchButton.addActionListener(new ActionListener() {
    @Override
    public void actionPerformed(ActionEvent e) {
@@ -49,6 +69,14 @@ public class ServerHome {
     // Query flooding needs to be implemented
 
     String searchString = textField1.getText();
+
+    try {
+     node.searchFiles(searchString);
+    } catch (IOException ex) {
+     ex.printStackTrace();
+    }
+
+    System.out.println(node.getResultList());
 
     JFrame ResultFrame = new JFrame("SearchResult");
     ResultFrame.setContentPane(new SearchResult(searchString).SearchResult);
