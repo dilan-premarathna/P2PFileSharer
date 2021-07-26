@@ -1,5 +1,6 @@
 package service;
 
+import util.MessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.Query;
@@ -62,6 +63,7 @@ public class Node {
                 unRegisterNode();
             } else {
                 retryCount = 0;
+                startListner();
             }
         }
         log.info(neighbours.toString());
@@ -210,5 +212,11 @@ public class Node {
     public List<Neighbour> getNeighboursList() {
 
         return neighboursList;
+    }
+
+    private void startListner(){
+        Runnable runnable = new MessageProcessor(this,serverPort);
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 }
