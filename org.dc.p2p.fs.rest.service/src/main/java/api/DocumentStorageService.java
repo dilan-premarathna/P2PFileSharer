@@ -7,19 +7,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static client.api.downloadUtil.printMD5ofFile;
-import static java.nio.file.Files.readAllBytes;
 
 @Service
 public class DocumentStorageService {
@@ -38,10 +35,10 @@ public class DocumentStorageService {
             rafile.setLength(randomNum*1048576);
             log.info("File size of the \"" + name + "\" file is " + randomNum + " MB");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error while generating the \"" + name + "\" file.",e);
         }
-        Path DirectoryPath = Paths.get(ServerConfigurations.props.getProperty("file.tempDir")).toAbsolutePath().normalize();
-        printMD5ofFile(DirectoryPath.resolve(name), name);
-        return new UrlResource( DirectoryPath.resolve(name).toUri());
+        Path directoryPath = Paths.get(ServerConfigurations.props.getProperty("file.tempDir")).toAbsolutePath().normalize();
+        printMD5ofFile(directoryPath.resolve(name), name);
+        return new UrlResource(directoryPath.resolve(name).toUri());
     }
 }

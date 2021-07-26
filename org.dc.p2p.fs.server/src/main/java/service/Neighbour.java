@@ -5,25 +5,25 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Neighbour {
 
+    private static final Logger log = LoggerFactory.getLogger(Neighbour.class);
     private String ip;
     private int port;
 
     public Neighbour(String ip, int port) {
-
         this.ip = ip;
         this.port = port;
     }
 
     public String getIp() {
-
         return this.ip;
     }
 
     public int getPort() {
-
         return this.port;
     }
 
@@ -31,7 +31,7 @@ public class Neighbour {
 
         String joinMessage = "JOIN " + clientIP + " " + clientPort;
         joinMessage = String.format("%04d", joinMessage.length() + 5) + " " + joinMessage;
-        System.out.println(joinMessage);
+        log.info(joinMessage);
 
         InetAddress ia = InetAddress.getByName(getIp());
         byte[] messageBytes = joinMessage.getBytes();
@@ -47,13 +47,13 @@ public class Neighbour {
         try {
             socket.receive(dpResponse);
         } catch (SocketTimeoutException e) {
-            System.out.println("Timeout reached while receiving data from the Neighbour server " + e);
+            log.info("Timeout reached while receiving data from the Neighbour server.",e);
             socket.close();
             return false;
         }
 
         String nodeResponse = new String(dpResponse.getData());
-        System.out.println("neighbour response is " + nodeResponse);
+        log.info("neighbour response is " + nodeResponse);
         socket.close();
         return processNodeResponse(nodeResponse.trim(), neighbourList);
     }
@@ -62,8 +62,8 @@ public class Neighbour {
             throws Exception {
 
         String[] mes = message.split(" ");
-        System.out.println(message);
-        System.out.println("processNodeResponse: " + mes[2]);
+        log.info(message);
+        log.info("processNodeResponse: " + mes[2]);
 
         boolean neighbourExist = false;
         if (mes[1].equals("JOINOK")) {
@@ -74,9 +74,9 @@ public class Neighbour {
                         break;
                     }
                 }
-                if (neighbourExist == false)
+                if (neighbourExist == false) {
                     neighbourList.add(this);
-
+                }
             } else if (mes[2].equals("9999")) {
                 throw new Exception("failed, can’t register." + " initial join failed");
             }
@@ -84,7 +84,5 @@ public class Neighbour {
         } else {
             return false;
         }
-
     }
-
 }

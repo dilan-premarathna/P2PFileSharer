@@ -39,7 +39,7 @@ public class ServerConfigurations {
             fileListInitializer();
             logger.info("Random File names for the App instance is " + randomNameList.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error occurred while reading the property file.",e);
         }
     }
 
@@ -57,7 +57,7 @@ public class ServerConfigurations {
                 size--;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error occurred while obtaining the file names from the list.",e);
         }
     }
 
@@ -117,7 +117,7 @@ public class ServerConfigurations {
             prop.load(new FileInputStream(propFileLocation));
             return prop.getProperty(propertyName);
         }catch(IOException ex){
-            System.out.println(ex.getMessage());
+            logger.error(ex.getMessage());
             return null;
         }
     }
