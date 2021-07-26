@@ -57,20 +57,16 @@ public class FilesApiController implements FilesApi {
                         realFileName =  getRealFileName(name);
                         resource = docStorageService.getFileAsResource(realFileName);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("Error while generating \"" + realFileName + " file.", e);
                     }
                     log.info("Downloading \"" + realFileName + "\" file by client " + request.getRemoteAddr());
                     return ResponseEntity.ok().contentType(MediaType.parseMediaType(accept))
                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
                 }
-//                ApiResponseDTO response = new ApiResponseDTO();
-//                response.code(400);
-//                response.message("bad request");
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
                 log.error("Missing required \"name\" query parameter.");
                 return ResponseEntity.status(Response.SC_BAD_REQUEST).build();
             } catch (Exception e) {
-                log.error("Couldn't serialize response for content type multipart/form-data or application/octet-stream", e);
+                log.error("Couldn't build response for content type multipart/form-data or application/octet-stream", e);
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }

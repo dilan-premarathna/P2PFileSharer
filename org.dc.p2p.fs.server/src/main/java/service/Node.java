@@ -1,5 +1,7 @@
 package service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.Query;
 import util.Result;
 import util.Service;
@@ -28,6 +30,8 @@ public class Node {
     private List<String> fileList;
     public static List<Neighbour> neighboursList = new ArrayList<>();
     private final Result result = new Result();
+    private static final Logger log = LoggerFactory.getLogger(Node.class);
+
 
     public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit, int restServicePort){
         this.serverIP = ip;
@@ -45,12 +49,12 @@ public class Node {
         Neighbour[] neighbours = new Neighbour[0];
         String regMessage = "REG " + this.serverIP + " " + this.serverPort + " " + serverName;
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
-        System.out.println(regMessage);
+        log.info(regMessage);
         String bsResponse = service.sendToBS(regMessage, bsServerIP, bsServerPort, soTimeout);
         if (bsResponse != null) {
             neighbours = processBSResponse(bsResponse);
         } else {
-            System.out.println("Error occurred while connecting to Boostrap Server");
+            log.error("Error occurred while connecting to Boostrap Server.");
         }
         if (neighbours.length != 0) {
             boolean neighbourConnectStatus = processNeighbour(neighbours);
@@ -60,8 +64,7 @@ public class Node {
                 retryCount = 0;
             }
         }
-
-        System.out.println(neighbours.toString());
+        log.info(neighbours.toString());
     }
 
     public void unRegisterNode() throws Exception {
@@ -69,13 +72,13 @@ public class Node {
         String unRegMessage = "UNREG " + serverIP + " " + serverPort + " " + serverName;
         unRegMessage = String.format("%04d", unRegMessage.length() + 5) + " " + unRegMessage;
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
-        System.out.println(bsResponse);
+        log.info(bsResponse);
         retryCount += 1;
         if (retryCount <= retryLimit) {
-            System.out.println(retryCount + " Retry to register node");
+            log.info(retryCount + " Retry to register node");
             registerNode();
         } else {
-            System.out.println("Retry Limit reached");
+            log.info("Retry Limit reached");
         }
     }
 
@@ -83,8 +86,8 @@ public class Node {
             throws Exception {
 
         String[] mes = message.split(" ");
-        System.out.println(message);
-        System.out.println("processBSResponse: " + mes[2]);
+        log.info(message);
+        log.info("processBSResponse: " + mes[2]);
         int noNodes = Integer.parseInt(mes[2]);
 
         if (0 <= noNodes && noNodes <= 2) {
@@ -138,13 +141,13 @@ public class Node {
 
         } else {
             query = new Query(this.serverIP, this.serverPort, fName, 5);
-            System.out.println(query.getMsgString());
+            log.info(query.getMsgString());
 
             for (Neighbour neighbour : neighboursList) {
                 service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
             }
         }
-        System.out.println("Searching done!");
+        log.info("Searching done!");
     }
 
     private void decodeAndAct(String recQuery) throws IOException {
