@@ -3,6 +3,8 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import conf.ServerConfigurations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.Neighbour;
 import service.Node;
 
@@ -32,6 +34,8 @@ public class ServerHome {
  JPanel JPServerInfo;
 
  private Node node;
+
+ private static final Logger log = LoggerFactory.getLogger(ServerHome.class);
 
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
   serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
@@ -69,7 +73,7 @@ public class ServerHome {
   searchButton.addActionListener(new ActionListener() {
    @Override
    public void actionPerformed(ActionEvent e) {
-    System.out.println("Searching for the files");
+    log.info("Searching for the files");
     // Query flooding needs to be implemented
 
     String searchString = textField1.getText();
@@ -81,7 +85,7 @@ public class ServerHome {
     }
     String resultText = "";
     for (String element : node.getResultList().getFileList()) {
-     System.out.println(element);
+     log.info(element);
      resultText += element + "\n";
     }
 

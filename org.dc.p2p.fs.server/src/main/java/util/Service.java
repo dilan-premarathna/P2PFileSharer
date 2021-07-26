@@ -1,5 +1,8 @@
 package util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -7,6 +10,8 @@ import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 
 public class Service {
+
+    private static final Logger log = LoggerFactory.getLogger(Service.class);
 
     public String sendToBS(String message, String serverIP, int serverPort, int soTimeout) throws Exception {
 
@@ -24,12 +29,12 @@ public class Service {
         try {
             socket.receive(dpResponse);
         } catch (SocketTimeoutException e) {
-            System.out.println("Timeout reached while receiving data from Boostrap server " + e);
+            log.error("Timeout reached while receiving data from Boostrap server " , e);
             socket.close();
             return null;
         }
         String bsResponse = new String(dpResponse.getData());
-        System.out.println("result is " + bsResponse);
+        log.info("result is " + bsResponse);
         socket.close();
         return bsResponse.trim();
 

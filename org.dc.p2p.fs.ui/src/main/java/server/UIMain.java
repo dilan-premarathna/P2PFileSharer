@@ -2,6 +2,8 @@ package server;
 
 import conf.ServerConfigurations;
 import gui.ServerHome;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.Node;
 
 import javax.swing.*;
@@ -13,20 +15,22 @@ import java.util.List;
 
 public class UIMain {
 
+    private static final Logger log = LoggerFactory.getLogger(UIMain.class);
+
     public UIMain(ServerConfigurations configs) throws Exception {
 
-        System.out.println("Starting the server ...");
-        System.out.println("Server IP = "+ configs.getServerIP());
-        System.out.println("Server Port = " + configs.getServerPort());
-        System.out.println("BS IP = " + configs.getBSIP());
-        System.out.println("BS Port = " + configs.getBSPort());
+        log.info("Starting the server ...");
+        log.info("Server IP = "+ configs.getServerIP());
+        log.info("Server Port = " + configs.getServerPort());
+        log.info("BS IP = " + configs.getBSIP());
+        log.info("BS Port = " + configs.getBSPort());
 
         Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(),
                 configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort());
         node.registerNode();
 
         List<String> fList = configs.getRandomNameList();
-        System.out.println(fList);
+        log.info(fList.toString());
         node.setFileList(fList);
 
         InitServerHomeUI(configs, node);
