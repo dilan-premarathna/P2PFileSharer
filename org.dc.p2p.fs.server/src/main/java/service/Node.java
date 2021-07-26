@@ -1,5 +1,6 @@
 package service;
 
+import util.MessageProcessor;
 import util.Query;
 import util.Result;
 import util.Service;
@@ -58,6 +59,7 @@ public class Node {
                 unRegisterNode();
             } else {
                 retryCount = 0;
+                startListner();
             }
         }
 
@@ -207,5 +209,11 @@ public class Node {
     public List<Neighbour> getNeighboursList() {
 
         return neighboursList;
+    }
+
+    private void startListner(){
+        Runnable runnable = new MessageProcessor(this,serverPort);
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 }

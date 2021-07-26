@@ -69,7 +69,7 @@ public class Neighbour {
         if (mes[1].equals("JOINOK")) {
             if (mes[2].equals("0")) {
                 for (Neighbour neb : neighbourList) {
-                    if (neb.getIp() == this.getIp() && neb.getPort() == this.getPort()) {
+                    if (neb.getIp().equals(this.getIp()) && neb.getPort() == this.getPort()) {
                         neighbourExist = true;
                         break;
                     }
