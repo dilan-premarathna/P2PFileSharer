@@ -27,7 +27,7 @@ public class downloadUtil {
         FileDownloaderServiceApi apiInstance = new FileDownloaderServiceApi(client);
         try {
             File file =  apiInstance.filesFileByNameGet(fileName);
-            Path downloadedFile = Paths.get(ServerConfigurations.props.getProperty("file.downloadDir")).
+            Path downloadedFile = Paths.get(ServerConfigurations.props.getProperty("FILE_DOWNLOAD_DIR")).
                     toAbsolutePath().normalize().resolve(fileName);
             Files.copy(file.toPath(), downloadedFile, StandardCopyOption.REPLACE_EXISTING);
             log.info("File \"" + fileName + "\" Finished Downloading.");

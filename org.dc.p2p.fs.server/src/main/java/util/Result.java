@@ -12,6 +12,10 @@ public class Result {
         this.fileList = fileList;
     }
 
+    public void clearResultList() {
+        fileList = new String[0];
+    }
+
     public String getIp() {
         return ip;
     }
