@@ -48,6 +48,7 @@ public class ServerHome {
   // Local server storage file listing logic
   /*  File f = new File(config.getFilesStorage());
   String[] filelist = f.list();
+  String files = "";
   for (int i = 0; i < filelist.length; i++) {
    files += filelist[i] + "\n";
   }*/
