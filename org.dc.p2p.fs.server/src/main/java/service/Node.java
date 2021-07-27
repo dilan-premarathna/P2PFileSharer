@@ -136,7 +136,7 @@ public class Node {
     }
 
     public void searchFiles(String fName) throws IOException {
-
+        result.clearResultList();
         String str = isFilePresent(fName);
         if (str.length() > 0) {
             resultList = str.split("#");
