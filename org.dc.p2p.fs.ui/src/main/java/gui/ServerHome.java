@@ -44,12 +44,13 @@ public class ServerHome {
  }
 
  public void setTextPaneFiles(JTextPane textPaneFiles, ServerConfigurations config) {
-  File f = new File(config.getFilesStorage());
+  // Local server storage file listing logic
+  /*  File f = new File(config.getFilesStorage());
   String[] filelist = f.list();
   String files = "";
   for (int i = 0; i < filelist.length; i++) {
    files += filelist[i] + "\n";
-  }
+  }*/
   String[] randomfilelist = config.getRandomNameList().toArray(new String[0]);
   for (int i = 0; i < randomfilelist.length; i++) {
    files += randomfilelist[i] + "\n";
