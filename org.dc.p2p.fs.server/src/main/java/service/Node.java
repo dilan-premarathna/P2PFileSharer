@@ -1,5 +1,6 @@
 package service;
 
+import util.MessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.Query;
@@ -49,7 +50,7 @@ public class Node {
         Neighbour[] neighbours = new Neighbour[0];
         String regMessage = "REG " + this.serverIP + " " + this.serverPort + " " + serverName;
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
-        log.info(regMessage);
+        log.info("Registering " +serverName +" with BS server: reg message " + regMessage);
         String bsResponse = service.sendToBS(regMessage, bsServerIP, bsServerPort, soTimeout);
         if (bsResponse != null) {
             neighbours = processBSResponse(bsResponse);
@@ -62,8 +63,10 @@ public class Node {
                 unRegisterNode();
             } else {
                 retryCount = 0;
+
             }
         }
+        startListner();
         log.info(neighbours.toString());
     }
 
@@ -72,10 +75,11 @@ public class Node {
         String unRegMessage = "UNREG " + serverIP + " " + serverPort + " " + serverName;
         unRegMessage = String.format("%04d", unRegMessage.length() + 5) + " " + unRegMessage;
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
-        log.info(bsResponse);
+        log.info(serverName +" unregistered from the BS" +bsResponse);
         retryCount += 1;
         if (retryCount <= retryLimit) {
             log.info(retryCount + " Retry to register node");
+            Thread.sleep(100);
             registerNode();
         } else {
             log.info("Retry Limit reached");
@@ -104,6 +108,8 @@ public class Node {
                 case 9997:
                     throw new Exception("failed, registered" + " to another user, try a different IP and port");
                 case 9998:
+                    log.error("Node already exists. Unregistering the node");
+                    unRegisterNode();
                     throw new Exception("failed, already registered" + " to you, unregister first");
                 case 9999:
                     throw new Exception("failed, there is some error" + " in the command");
@@ -123,7 +129,7 @@ public class Node {
         return connectSuccess;
     }
 
-    private String isFilePresent(String fName) {
+    public String isFilePresent(String fName) {
 
         StringBuilder fileStr = new StringBuilder();
         for (String element : fileList
@@ -134,11 +140,11 @@ public class Node {
     }
 
     public void searchFiles(String fName) throws IOException {
-
+        result.clearResultList();
         String str = isFilePresent(fName);
         if (str.length() > 0) {
             resultList = str.split("#");
-
+            result.setResult(serverIP, serverPort, resultList);
         } else {
             query = new Query(this.serverIP, this.serverPort, fName, 5);
             log.info(query.getMsgString());
@@ -186,10 +192,11 @@ public class Node {
     }
 
     public Result getResultList() {
-
-        result.setResult(resultIP, resultPort, resultList);
-
         return result;
+    }
+
+    public void setResultObj(String resultIP, int resultPort, String[] resultList) {
+        result.setResult(resultIP, resultPort, resultList);
     }
 
     public String getResultIP() {
@@ -210,5 +217,13 @@ public class Node {
     public List<Neighbour> getNeighboursList() {
 
         return neighboursList;
+    }
+
+    private void startListner(){
+
+        log.info("Listener Started on server port "+serverPort);
+        Runnable runnable = new MessageProcessor(this, serverIP,serverPort);
+        Thread thread = new Thread(runnable);
+        thread.start();
     }
 }

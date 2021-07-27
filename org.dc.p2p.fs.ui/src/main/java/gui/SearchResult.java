@@ -3,10 +3,16 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import conf.ServerConfigurations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.Node;
+import client.api.downloadUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author janaka
@@ -14,28 +20,45 @@ import java.awt.*;
 public class SearchResult {
     public JPanel SearchResult;
     private JLabel HomeButton;
+    private JTextPane SearchString;
+    private JPanel JPSearchPanel;
+    private JPanel JPSearchResultSet;
+    private JButton downloadButton;
+    private JList ResultList;
+    private JTextPane SearchResults;
+
+    private static final Logger log = LoggerFactory.getLogger(SearchResult.class);
+
+    public void setResultList(JList resultList, DefaultListModel list) {
+        resultList.setModel(list);
+    }
 
     public void setSearchResults(String searchResults) {
         SearchResults.setText(searchResults);
     }
 
-    private JTextPane SearchResults;
-
-    public void setSearchString(String searchString) {
-        SearchString.setText("Search Result for : " + searchString);
+    public void setSearchString(JTextPane searchString, String searchtext) {
+        searchString.setText("Search Result for : " + searchtext);
     }
-
-    private JTextPane SearchString;
-    private JPanel JPSearchPanel;
-    private JPanel JPSearchResultSet;
 
     public SearchResult() {
 
+        downloadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                log.info("Downloading ..." + ResultList.getSelectedValue());
+                String ServerIP = "127.0.0.1";
+                String ServerPort = "5050";
+                downloadUtil.downloadFile(ServerIP, ServerPort, ServerConfigurations.getRandomNameList().get(0));
+            }
+        });
     }
 
     public void init(Node node, String searchtext, String resultText) {
-        setSearchString(searchtext);
-        setSearchResults(resultText);
+        setSearchString(SearchString, searchtext);
+        DefaultListModel DLM = new DefaultListModel();
+        DLM.addElement(resultText);
+        setResultList(ResultList, DLM);
     }
 
     {
@@ -72,14 +95,21 @@ public class SearchResult {
         SearchString.setText("Search Result for : ");
         JPSearchPanel.add(SearchString, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 3), null, 0, false));
         JPSearchResultSet = new JPanel();
-        JPSearchResultSet.setLayout(new GridLayoutManager(3, 1, new Insets(0, 10, 0, 10), -1, -1));
+        JPSearchResultSet.setLayout(new GridLayoutManager(3, 3, new Insets(0, 10, 0, 10), -1, -1));
         SearchResult.add(JPSearchResultSet, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        SearchResults = new JTextPane();
-        JPSearchResultSet.add(SearchResults, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        downloadButton = new JButton();
+        downloadButton.setText("Download");
+        JPSearchResultSet.add(downloadButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        ResultList = new JList();
+        final DefaultListModel defaultListModel1 = new DefaultListModel();
+        ResultList.setModel(defaultListModel1);
+        JPSearchResultSet.add(ResultList, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         final Spacer spacer4 = new Spacer();
-        JPSearchResultSet.add(spacer4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        JPSearchResultSet.add(spacer4, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer5 = new Spacer();
-        JPSearchResultSet.add(spacer5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        JPSearchResultSet.add(spacer5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer6 = new Spacer();
+        JPSearchResultSet.add(spacer6, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     }
 
     /**

@@ -44,7 +44,7 @@ public class ServerConfigurations {
     }
 
     private void fileListInitializer() {
-        String fileListPath = props.getProperty("fileNameList.location");
+        String fileListPath = props.getProperty("FILE_NAME_LIST");
         Charset charset = StandardCharsets.ISO_8859_1;
         try {
             List<String> result = Files.readAllLines(Paths.get(fileListPath), charset);
