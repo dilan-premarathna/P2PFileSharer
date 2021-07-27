@@ -24,7 +24,7 @@ public class DocumentStorageService {
     private static final Logger log = LoggerFactory.getLogger(DocumentStorageService.class);
 
     public Resource getFileAsResource(String name) throws MalformedURLException {
-        File file = new File(ServerConfigurations.props.getProperty("file.tempDir") + "/" + name);
+        File file = new File(ServerConfigurations.props.getProperty("FILE_STORAGE_DIR") + "/" + name);
         RandomAccessFile rafile;
         try {
             rafile = new RandomAccessFile(file, "rw");
@@ -37,7 +37,7 @@ public class DocumentStorageService {
         } catch (Exception e) {
             log.error("Error while generating the \"" + name + "\" file.",e);
         }
-        Path directoryPath = Paths.get(ServerConfigurations.props.getProperty("file.tempDir")).toAbsolutePath().normalize();
+        Path directoryPath = Paths.get(ServerConfigurations.props.getProperty("FILE_STORAGE_DIR")).toAbsolutePath().normalize();
         printMD5ofFile(directoryPath.resolve(name), name);
         return new UrlResource(directoryPath.resolve(name).toUri());
     }

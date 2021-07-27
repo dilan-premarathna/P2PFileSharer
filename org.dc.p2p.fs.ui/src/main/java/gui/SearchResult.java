@@ -3,7 +3,11 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import conf.ServerConfigurations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.Node;
+import client.api.downloadUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +27,8 @@ public class SearchResult {
     private JList ResultList;
     private JTextPane SearchResults;
 
+    private static final Logger log = LoggerFactory.getLogger(SearchResult.class);
+
     public void setResultList(JList resultList, DefaultListModel list) {
         resultList.setModel(list);
     }
@@ -40,7 +46,10 @@ public class SearchResult {
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //File down load logic needs to be implemented
+                log.info("Downloading ..." + ResultList.getSelectedValue());
+                String ServerIP = "127.0.0.1";
+                String ServerPort = "5050";
+                downloadUtil.downloadFile(ServerIP, ServerPort, ServerConfigurations.getRandomNameList().get(0));
             }
         });
     }
