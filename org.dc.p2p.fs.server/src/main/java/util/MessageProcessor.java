@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.List;
 
 public class MessageProcessor implements Runnable {
@@ -14,11 +15,14 @@ public class MessageProcessor implements Runnable {
     private Node node;
     private boolean stopListner = false;
     private List<Neighbour> neighbourList;
+    private final String nodeIP;
     private final int serverPort;
+    private final Service service = new Service();
 
-    public MessageProcessor(Node node, int port){
+    public MessageProcessor(Node node, String nodeIP, int port){
         this.node = node;
         this.neighbourList = node.getNeighboursList();
+        this.nodeIP = nodeIP;
         this.serverPort = port;
     }
 
@@ -49,7 +53,7 @@ public class MessageProcessor implements Runnable {
         }
     }
 
-    public String processMessage(String message) {
+    public String processMessage(String message) throws IOException {
 
         String[] mes = message.split(" ");
         int port;
@@ -93,7 +97,29 @@ public class MessageProcessor implements Runnable {
                     leaveResMessage = String.format("%04d", leaveResMessage.length() + 5) + " " + leaveResMessage;
                     responseMsg = leaveResMessage;
                 break;
-
+            case "SER":
+                String str = node.isFilePresent(mes[4]);
+                if (str.length() > 0) {
+                    String msg = " SEROK " + nodeIP + " " + serverPort + " " + str + " " + "1";
+                    int length = msg.length() + 5;
+                    msg = String.format("%04d", length) + msg;
+                    service.send(msg, mes[2], Integer.parseInt(mes[3]));
+                    //send
+                } else {
+                    mes[5] = String.valueOf(Integer.parseInt(mes[5]) - 1);
+                    if (!mes[5].equals("0")) {
+                        String joined = String.join(" ", mes);
+                        for (Neighbour neighbour_ : neighbourList) {
+                            service.send(joined, neighbour_.getIp(), neighbour_.getPort());
+                        }
+                    }
+                }
+                break;
+            case "SEROK":
+                if(Integer.parseInt(mes[2]) > 0) {
+                    node.setResultObj(mes[3], Integer.parseInt(mes[4]), Arrays.copyOfRange(mes, 6, mes.length));
+                }
+                break;
             default:
                 System.err.println("Error: " + message);
                 break;

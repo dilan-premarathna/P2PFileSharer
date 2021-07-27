@@ -125,7 +125,7 @@ public class Node {
         return connectSuccess;
     }
 
-    private String isFilePresent(String fName) {
+    public String isFilePresent(String fName) {
 
         StringBuilder fileStr = new StringBuilder();
         for (String element : fileList
@@ -140,7 +140,7 @@ public class Node {
         String str = isFilePresent(fName);
         if (str.length() > 0) {
             resultList = str.split("#");
-
+            result.setResult(serverIP, serverPort, resultList);
         } else {
             query = new Query(this.serverIP, this.serverPort, fName, 5);
             log.info(query.getMsgString());
@@ -188,10 +188,11 @@ public class Node {
     }
 
     public Result getResultList() {
-
-        result.setResult(resultIP, resultPort, resultList);
-
         return result;
+    }
+
+    public void setResultObj(String resultIP, int resultPort, String[] resultList) {
+        result.setResult(resultIP, resultPort, resultList);
     }
 
     public String getResultIP() {
@@ -215,7 +216,7 @@ public class Node {
     }
 
     private void startListner(){
-        Runnable runnable = new MessageProcessor(this,serverPort);
+        Runnable runnable = new MessageProcessor(this, serverIP,serverPort);
         Thread thread = new Thread(runnable);
         thread.start();
     }
