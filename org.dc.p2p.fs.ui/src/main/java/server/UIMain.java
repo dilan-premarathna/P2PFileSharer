@@ -4,6 +4,7 @@ import conf.ServerConfigurations;
 import gui.ServerHome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.HelthcheckService;
 import service.Node;
 
 import javax.swing.*;
@@ -29,6 +30,8 @@ public class UIMain {
                 configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort());
         node.registerNode();
 
+        HelthcheckService service = new HelthcheckService(node);
+        service.scheduleTask(Node.neighboursList);
         List<String> fList = configs.getRandomNameList();
         log.info(fList.toString());
         node.setFileList(fList);

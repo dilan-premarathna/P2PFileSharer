@@ -19,14 +19,14 @@ public class Node {
     private int restServicePort;
     private final int serverPort;
     private int resultPort;
-    private final int bsServerPort;
-    private final int soTimeout;
+    public static int bsServerPort;
+    public static int soTimeout;
     private int retryCount;
     private final int retryLimit;
     private final String serverName;
     private final String serverIP;
     private String resultIP;
-    private final String bsServerIP;
+    public static String bsServerIP;
     private String[] resultList;
     private Query query;
     private final Service service = new Service();
@@ -55,9 +55,9 @@ public class Node {
     public void registerNode() throws Exception {
 
         Neighbour[] neighbours = new Neighbour[0];
-        String regMessage = "REG " + this.serverIP + " " + this.serverPort + " " + serverName;
+        String regMessage = "REG " + serverIP + " " + serverPort + " " + serverName;
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
-        log.info("Registering " +serverName +" with BS server: reg message " + regMessage);
+        log.info("Registering " + this.serverName +" with BS server: reg message " + regMessage);
         String bsResponse = service.sendToBS(regMessage, bsServerIP, bsServerPort, soTimeout);
         if (bsResponse != null) {
             neighbours = processBSResponse(bsResponse);
@@ -85,13 +85,13 @@ public class Node {
         log.info(serverName +" unregistered from the BS" +bsResponse);
         retryCount += 1;
         if (retry){
-        if (retryCount <= retryLimit) {
-            log.info(retryCount + " Retry to register node");
-            Thread.sleep(100);
-            registerNode();
-        } else {
-            log.info("Retry Limit reached");
-        }}
+            if (retryCount <= retryLimit) {
+                log.info(retryCount + " Retry to register node");
+                Thread.sleep(100);
+                registerNode();
+            } else {
+                log.info("Retry Limit reached");
+            }}
     }
 
     public Neighbour[] processBSResponse(String message)
