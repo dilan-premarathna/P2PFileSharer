@@ -8,9 +8,11 @@ import util.Result;
 import util.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 
 public class Node {
 
@@ -30,11 +32,14 @@ public class Node {
     private final Service service = new Service();
     private List<String> fileList;
     public static List<Neighbour> neighboursList = new ArrayList<>();
+    public boolean retry;
+
+    public static List<Neighbour> connectedNeighboursList = new ArrayList<>();
+    public static Map<String, List<Neighbour>> neighbourMap = new HashMap<>();
     private final Result result = new Result();
     private static final Logger log = LoggerFactory.getLogger(Node.class);
 
-
-    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout,int retryLimit, int restServicePort){
+    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit, int restServicePort){
         this.serverIP = ip;
         this.serverName = serverName;
         this.serverPort = port;
@@ -43,6 +48,9 @@ public class Node {
         this.soTimeout = soTimeout;
         this.retryLimit = retryLimit;
         this.restServicePort = restServicePort;
+        neighbourMap.put("Joined",neighboursList);
+        neighbourMap.put("Connected", connectedNeighboursList);
+        retry=true;
     }
 
     public void registerNode() throws Exception {
@@ -77,13 +85,14 @@ public class Node {
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
         log.info(serverName +" unregistered from the BS" +bsResponse);
         retryCount += 1;
+        if (retry){
         if (retryCount <= retryLimit) {
             log.info(retryCount + " Retry to register node");
             Thread.sleep(100);
             registerNode();
         } else {
             log.info("Retry Limit reached");
-        }
+        }}
     }
 
     public Neighbour[] processBSResponse(String message)
@@ -109,6 +118,7 @@ public class Node {
                     throw new Exception("failed, registered" + " to another user, try a different IP and port");
                 case 9998:
                     log.error("Node already exists. Unregistering the node");
+                    this.setRetry(false);
                     unRegisterNode();
                     throw new Exception("failed, already registered" + " to you, unregister first");
                 case 9999:
@@ -152,6 +162,11 @@ public class Node {
             for (Neighbour neighbour : neighboursList) {
                 service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
             }
+
+            for (Neighbour neighbour : connectedNeighboursList) {
+                service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
+            }
+
         }
         log.info("Searching done!");
     }
@@ -219,11 +234,26 @@ public class Node {
         return neighboursList;
     }
 
+    public static List<Neighbour> getConnectedNeighboursList() {
+
+        return connectedNeighboursList;
+    }
+
     private void startListner(){
 
         log.info("Listener Started on server port "+serverPort);
         Runnable runnable = new MessageProcessor(this, serverIP,serverPort);
         Thread thread = new Thread(runnable);
         thread.start();
+    }
+
+    public boolean getRetry() {
+
+        return retry;
+    }
+
+    public void setRetry(boolean retry) {
+
+        this.retry = retry;
     }
 }

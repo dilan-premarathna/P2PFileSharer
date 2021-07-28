@@ -14,14 +14,14 @@ public class MessageProcessor implements Runnable {
 
     private Node node;
     private boolean stopListner = false;
-    private List<Neighbour> neighbourList;
+    private List<Neighbour> connectedNeighbourList;
     private final String nodeIP;
     private final int serverPort;
     private final Service service = new Service();
 
     public MessageProcessor(Node node, String nodeIP, int port){
         this.node = node;
-        this.neighbourList = node.getNeighboursList();
+        this.connectedNeighbourList = node.getConnectedNeighboursList();
         this.nodeIP = nodeIP;
         this.serverPort = port;
     }
@@ -71,19 +71,22 @@ public class MessageProcessor implements Runnable {
 
                     Neighbour neighbour = new Neighbour(ip,port);
                     boolean neighbourExist = false;
-                    for (Neighbour neb : neighbourList) {
+                    String joinResMessage="";
+                    for (Neighbour neb : connectedNeighbourList) {
                         if (neb.getIp().equals(ip) && neb.getPort() == port) {
                             neighbourExist = true;
                             break;
                         }
                     }
                     if (!neighbourExist){
-                        neighbourList.add(neighbour);}
+                        connectedNeighbourList.add(neighbour);
+                        joinResMessage = "JOINOK " + "0";}
                     else {
                         System.out.println("##### neighbour exist ######");
+                        joinResMessage = "JOINOK " + "9999";
                     }
 
-                    String joinResMessage = "JOINOK " + "0";
+
                     joinResMessage = String.format("%04d", joinResMessage.length() + 5) + " " + joinResMessage;
                     responseMsg = joinResMessage;
                     System.out.println("res:" + joinResMessage);
@@ -92,7 +95,7 @@ public class MessageProcessor implements Runnable {
             case "LEAVE":
                     ip = mes[2];
                     port = Integer.parseInt(mes[3]);
-                    neighbourList.removeIf(neigh -> (neigh.getIp().equals(ip) && neigh.getPort()==port));
+                    connectedNeighbourList.removeIf(neigh -> (neigh.getIp().equals(ip) && neigh.getPort()==port));
                     String leaveResMessage = "LEAVEOK " + "0";
                     leaveResMessage = String.format("%04d", leaveResMessage.length() + 5) + " " + leaveResMessage;
                     responseMsg = leaveResMessage;
@@ -109,7 +112,7 @@ public class MessageProcessor implements Runnable {
                     mes[5] = String.valueOf(Integer.parseInt(mes[5]) - 1);
                     if (!mes[5].equals("0")) {
                         String joined = String.join(" ", mes);
-                        for (Neighbour neighbour_ : neighbourList) {
+                        for (Neighbour neighbour_ : connectedNeighbourList) {
                             service.send(joined, neighbour_.getIp(), neighbour_.getPort());
                         }
                     }
