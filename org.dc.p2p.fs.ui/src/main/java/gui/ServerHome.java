@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Neighbour;
 import service.Node;
+import util.Result;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -86,14 +87,16 @@ public class ServerHome {
     } catch (IOException ex) {
      ex.printStackTrace();
     }
-    String resultText = "";
-    for (String element : node.getResultList().getFileList()) {
-     log.info(element);
-     resultText += element + "\n";
+    DefaultListModel DLM = new DefaultListModel();
+    for (Result result : node.getResultList()) {
+     for (String filename : result.getFileList()) {
+      log.info(filename + "files found in server node with IP:" + result.getIp());
+      DLM.addElement(filename);
+     }
     }
 
     SearchResult searchResult = new SearchResult();
-    searchResult.init(node, searchString, resultText);
+    searchResult.init(node, searchString, DLM);
 
     JFrame ResultFrame = new JFrame("SearchResult");
     ResultFrame.setContentPane(searchResult.SearchResult);

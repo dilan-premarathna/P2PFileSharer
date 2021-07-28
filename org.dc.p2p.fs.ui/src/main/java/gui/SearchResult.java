@@ -49,16 +49,14 @@ public class SearchResult {
                 log.info("Downloading ..." + ResultList.getSelectedValue());
                 String ServerIP = "127.0.0.1";
                 String ServerPort = "5050";
-                downloadUtil.downloadFile(ServerIP, ServerPort, ServerConfigurations.getRandomNameList().get(0));
+                downloadUtil.downloadFile(ServerIP, ServerPort, ResultList.getSelectedValue().toString());
             }
         });
     }
 
-    public void init(Node node, String searchtext, String resultText) {
+    public void init(Node node, String searchtext, DefaultListModel resutList) {
         setSearchString(SearchString, searchtext);
-        DefaultListModel DLM = new DefaultListModel();
-        DLM.addElement(resultText);
-        setResultList(ResultList, DLM);
+        setResultList(ResultList, resutList);
     }
 
     {
