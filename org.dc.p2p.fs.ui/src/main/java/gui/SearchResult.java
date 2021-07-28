@@ -41,7 +41,7 @@ public class SearchResult {
         searchString.setText("Search Result for : " + searchtext);
     }
 
-    public SearchResult() {
+    public SearchResult(ServerConfigurations configs) {
 
         downloadButton.addActionListener(new ActionListener() {
             @Override
@@ -49,7 +49,18 @@ public class SearchResult {
                 log.info("Downloading ..." + ResultList.getSelectedValue());
                 String ServerIP = "127.0.0.1";
                 String ServerPort = "5050";
-                downloadUtil.downloadFile(ServerIP, ServerPort, ResultList.getSelectedValue().toString());
+                try {
+                    downloadUtil.downloadFile(ServerIP, ServerPort, ResultList.getSelectedValue().toString());
+                    JOptionPane.showMessageDialog(new JFrame(),
+                            "Download Complete \nDownload Location :" + configs.getFilesStorage(),
+                            "Download Status",
+                            JOptionPane.NO_OPTION);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(new JFrame(),
+                            "Download Failed",
+                            "Download Status",
+                            JOptionPane.WARNING_MESSAGE);
+                };
             }
         });
     }
@@ -116,4 +127,5 @@ public class SearchResult {
     public JComponent $$$getRootComponent$$$() {
         return SearchResult;
     }
+
 }
