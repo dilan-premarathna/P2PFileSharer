@@ -46,7 +46,10 @@ public class HelthcheckService {
         Runnable neighbour2 = () -> {
             try {
                 if (!neighbourList.isEmpty() && neighbourList.size()>1 && neighbourList.get(1) != null) {
-                    checkServerHealth(neighbourList.get(1));
+                    boolean neighbourHealthy = checkServerHealth(neighbourList.get(1));
+                    if(!neighbourHealthy){
+                        node.unRegisterNode();
+                    }
                 } else {
                     log.info("No 2nd neighbour node found to start HealthCheck API.");
                 }
@@ -57,8 +60,8 @@ public class HelthcheckService {
             }
         };
 
-        executor.scheduleAtFixedRate(neighbour1, 5, 5, TimeUnit.SECONDS);
-        executor.scheduleAtFixedRate(neighbour2, 5, 5, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(neighbour1, 5, 30, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(neighbour2, 5, 30, TimeUnit.SECONDS);
 
     }
 
@@ -92,7 +95,7 @@ public class HelthcheckService {
     private boolean processHealth(String msg){
         String[] mes = msg.split(" ");
 
-        if (mes[1]=="HEALTHOK"){
+        if (mes[1].equals("HEALTHOK")){
             return true;
         }else {
             return false;
