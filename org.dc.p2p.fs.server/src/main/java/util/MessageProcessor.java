@@ -103,7 +103,7 @@ public class MessageProcessor implements Runnable {
             case "SER":
                 String str = node.isFilePresent(mes[4]);
                 if (str.length() > 0) {
-                    String msg = " SEROK " + nodeIP + " " + serverPort + " " + str + " " + "1";
+                    String msg = " SEROK " + nodeIP + " " + node.getRestServicePort() + " " + str + " " + "1";
                     int length = msg.length() + 5;
                     msg = String.format("%04d", length) + msg;
                     service.send(msg, mes[2], Integer.parseInt(mes[3]));
@@ -120,7 +120,7 @@ public class MessageProcessor implements Runnable {
                 break;
             case "SEROK":
                 if(Integer.parseInt(mes[2]) > 0) {
-                    node.setResultObj(mes[3], Integer.parseInt(mes[4]), Arrays.copyOfRange(mes, 6, mes.length));
+                    node.addToResultObjList(node.setResultObj(mes[3], Integer.parseInt(mes[4]), Arrays.copyOfRange(mes, 6, mes.length)));
                 }
                 break;
             default:

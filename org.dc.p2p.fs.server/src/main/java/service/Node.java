@@ -33,10 +33,9 @@ public class Node {
     private List<String> fileList;
     public static List<Neighbour> neighboursList = new ArrayList<>();
     public boolean retry;
-
     public static List<Neighbour> connectedNeighboursList = new ArrayList<>();
     public static Map<String, List<Neighbour>> neighbourMap = new HashMap<>();
-    private final Result result = new Result();
+    private final List<Result> resultObjList = new ArrayList<>();
     private static final Logger log = LoggerFactory.getLogger(Node.class);
 
     public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit, int restServicePort){
@@ -150,11 +149,11 @@ public class Node {
     }
 
     public void searchFiles(String fName) throws IOException {
-        result.clearResultList();
+        resultObjList.clear();
         String str = isFilePresent(fName);
         if (str.length() > 0) {
             resultList = str.split("#");
-            result.setResult(serverIP, serverPort, resultList);
+            resultObjList.add(setResultObj(serverIP, restServicePort, resultList));
         } else {
             query = new Query(this.serverIP, this.serverPort, fName, 5);
             log.info(query.getMsgString());
@@ -206,12 +205,18 @@ public class Node {
         decodeAndAct(recQuery);
     }
 
-    public Result getResultList() {
+    public List<Result> getResultList() {
+        return resultObjList;
+    }
+
+    public Result setResultObj(String resultIP, int resultPort, String[] resultList) {
+        Result result = new Result();
+        result.setResult(resultIP, resultPort, resultList);
         return result;
     }
 
-    public void setResultObj(String resultIP, int resultPort, String[] resultList) {
-        result.setResult(resultIP, resultPort, resultList);
+    public void addToResultObjList(Result result) {
+        resultObjList.add(result);
     }
 
     public String getResultIP() {
@@ -232,6 +237,10 @@ public class Node {
     public List<Neighbour> getNeighboursList() {
 
         return neighboursList;
+    }
+
+    public int getRestServicePort() {
+        return restServicePort;
     }
 
     public static List<Neighbour> getConnectedNeighboursList() {
