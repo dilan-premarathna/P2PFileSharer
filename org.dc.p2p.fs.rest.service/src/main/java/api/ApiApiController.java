@@ -31,6 +31,7 @@ public class ApiApiController implements ApiApi {
             response.status("Server Up");
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
+        log.error("The accept message type should be application/json.");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

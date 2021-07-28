@@ -25,9 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 public class FilesApiController implements FilesApi {
 
     private static final Logger log = LoggerFactory.getLogger(FilesApiController.class);
-
     private final ObjectMapper objectMapper;
-
     private final HttpServletRequest request;
 
     @Autowired
@@ -61,7 +59,8 @@ public class FilesApiController implements FilesApi {
                     }
                     log.info("Downloading \"" + realFileName + "\" file by client " + request.getRemoteAddr());
                     return ResponseEntity.ok().contentType(MediaType.parseMediaType(accept))
-                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
+                            .header(HttpHeaders.CONTENT_DISPOSITION,
+                                    "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
                 }
                 log.error("Missing required \"name\" query parameter.");
                 return ResponseEntity.status(Response.SC_BAD_REQUEST).build();
