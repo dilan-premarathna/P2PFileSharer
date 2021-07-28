@@ -28,12 +28,10 @@ public class MessageProcessor implements Runnable {
 
     @Override
     public void run() {
-
+        DatagramSocket socket = null;
         try {
-
+            socket = new DatagramSocket(serverPort);
             while (!stopListner) {
-
-                DatagramSocket socket = new DatagramSocket(serverPort);
 
                 byte[] b1 = new byte[2048];
 
@@ -45,10 +43,9 @@ public class MessageProcessor implements Runnable {
 
                 DatagramPacket dp1 = new DatagramPacket(b2, b2.length, packet.getAddress(), packet.getPort());
                 socket.send(dp1);
-                socket.close();
-                Thread.sleep(10);
             }
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
+            socket.close();
             System.err.println(e);
         }
     }
@@ -83,7 +80,7 @@ public class MessageProcessor implements Runnable {
                         joinResMessage = "JOINOK " + "0";}
                     else {
                         System.out.println("##### neighbour exist ######");
-                        joinResMessage = "JOINOK " + "9999";
+                        joinResMessage = "JOINOK " + "0";
                     }
 
 
@@ -121,7 +118,9 @@ public class MessageProcessor implements Runnable {
                 break;
             case "SEROK":
                 if(Integer.parseInt(mes[2]) > 0) {
-                    node.addToResultObjList(node.setResultObj(mes[3], Integer.parseInt(mes[4]), Arrays.copyOfRange(mes, 6, mes.length)));
+                    String result = message.substring(30,message.length());
+                    System.out.println("SEROK result msg *** "+result);
+                    node.addToResultObjList(node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#")));
                 }
                 break;
 

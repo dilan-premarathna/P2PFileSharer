@@ -145,7 +145,10 @@ public class Node {
         ) {
             if (element.toLowerCase().contains(fName.toLowerCase())) fileStr.append(element).append("#");
         }
-        return fileStr.toString();
+        if (fileStr.toString().length()>0){
+            return fileStr.substring(0,fileStr.toString().length()-1);}
+        else {
+        return fileStr.toString();}
     }
 
     public void searchFiles(String fName) throws IOException {

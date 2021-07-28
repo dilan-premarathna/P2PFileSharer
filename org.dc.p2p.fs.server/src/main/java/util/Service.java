@@ -42,6 +42,7 @@ public class Service {
 
     public void send(String message, String ip, int port) throws IOException {
 
+        log.info(message);
         DatagramSocket socket;
 
         socket = new DatagramSocket();
