@@ -124,6 +124,12 @@ public class MessageProcessor implements Runnable {
                     node.addToResultObjList(node.setResultObj(mes[3], Integer.parseInt(mes[4]), Arrays.copyOfRange(mes, 6, mes.length)));
                 }
                 break;
+
+            case "HEALTH":
+                String healthRes = "HEALTHOK";
+                String healthMessage = String.format("%04d", healthRes.length() + 5) + " " + healthRes;
+                responseMsg = healthMessage;
+                break;
             default:
                 System.err.println("Error: " + message);
                 break;

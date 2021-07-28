@@ -1,6 +1,5 @@
 package handler;
 
-import service.HelthcheckService;
 import conf.ServerConfigurations;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -9,7 +8,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 
 import server.UIMain;
-import service.Node;
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @SpringBootApplication
@@ -34,8 +32,6 @@ public class Swagger2SpringBoot implements CommandLineRunner {
         // Initialize UI and UDP communication links
         new UIMain(configs);
         // Initialize health check API
-        HelthcheckService service = new HelthcheckService();
-        service.scheduleTask(Node.neighboursList);
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {
