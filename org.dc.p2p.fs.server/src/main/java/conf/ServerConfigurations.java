@@ -78,7 +78,7 @@ public class ServerConfigurations {
     }
 
     public String getFilesStorage(){
-        return getStringProperty("FILE_STORAGE");
+        return getStringProperty("FILE_DOWNLOAD_DIR");
     }
 
     public String getServerName(){return getStringProperty("SERVER_NAME");}

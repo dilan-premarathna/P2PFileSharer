@@ -95,7 +95,7 @@ public class ServerHome {
      }
     }
 
-    SearchResult searchResult = new SearchResult();
+    SearchResult searchResult = new SearchResult(configs);
     searchResult.init(node, searchString, DLM);
 
     JFrame ResultFrame = new JFrame("SearchResult");
