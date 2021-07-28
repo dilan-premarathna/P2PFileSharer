@@ -31,7 +31,7 @@ public class Swagger2SpringBoot implements CommandLineRunner {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Swagger2SpringBoot.class);
         builder.headless(false);
         builder.run(args);
-        // Initialize UI and UDP coomunication links
+        // Initialize UI and UDP communication links
         new UIMain(configs);
         // Initialize health check API
         HelthcheckService service = new HelthcheckService();
