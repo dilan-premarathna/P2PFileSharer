@@ -54,7 +54,7 @@ public class Node {
 
     public boolean registerNode() throws Exception {
 
-        boolean registerStatus = false;
+        boolean registerStatus = true;
         Neighbour[] neighbours = new Neighbour[0];
         String regMessage = "REG " + serverIP + " " + serverPort + " " + serverName;
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
@@ -68,10 +68,10 @@ public class Node {
         if (neighbours.length != 0) {
             boolean neighbourConnectStatus = processNeighbour(neighbours);
             if (!neighbourConnectStatus) {
+                registerStatus = false;
                 unRegisterNode();
             } else {
                 retryCount = 0;
-                registerStatus = true;
             }
         }
         return registerStatus;
@@ -82,15 +82,16 @@ public class Node {
         String unRegMessage = "UNREG " + serverIP + " " + serverPort + " " + serverName;
         unRegMessage = String.format("%04d", unRegMessage.length() + 5) + " " + unRegMessage;
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
-        log.info(serverName +" unregistered from the BS" +bsResponse);
+        log.error(serverName +" unregistered from the BS" +bsResponse);
         retryCount += 1;
+        neighboursList.clear();
         if (retry){
             if (retryCount <= retryLimit) {
-                log.info("Attempt number "+retryCount +" to register with BS");
+                log.warn("Attempt number "+retryCount +" to register with BS");
                 Thread.sleep(100);
                 registerNode();
             } else {
-                log.info("Retry Limit reached");
+                log.error("Retry Limit reached");
             }}
     }
 
