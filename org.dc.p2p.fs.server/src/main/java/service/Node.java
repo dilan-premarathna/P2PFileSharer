@@ -52,8 +52,9 @@ public class Node {
         retry=true;
     }
 
-    public void registerNode() throws Exception {
+    public boolean registerNode() throws Exception {
 
+        boolean registerStatus = false;
         Neighbour[] neighbours = new Neighbour[0];
         String regMessage = "REG " + serverIP + " " + serverPort + " " + serverName;
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
@@ -70,10 +71,10 @@ public class Node {
                 unRegisterNode();
             } else {
                 retryCount = 0;
-
+                registerStatus = true;
             }
         }
-        startListner();
+        return registerStatus;
     }
 
     public void unRegisterNode() throws Exception {
@@ -85,7 +86,7 @@ public class Node {
         retryCount += 1;
         if (retry){
             if (retryCount <= retryLimit) {
-                log.info(retryCount + " Retry to register node");
+                log.info("Attempt number "+retryCount +" to register with BS");
                 Thread.sleep(100);
                 registerNode();
             } else {
@@ -158,7 +159,7 @@ public class Node {
             resultObjList.add(setResultObj(serverIP, restServicePort, resultList));
         } else {
             query = new Query(this.serverIP, this.serverPort, fName, 5);
-            log.info(query.getMsgString());
+            log.info("Query string for search files "+ query.getMsgString());
 
             for (Neighbour neighbour : neighboursList) {
                 service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
@@ -250,7 +251,7 @@ public class Node {
         return connectedNeighboursList;
     }
 
-    private void startListner(){
+    public void startListner(){
 
         log.info("Listener Started on server port "+serverPort);
         Runnable runnable = new MessageProcessor(this, serverIP,serverPort);
