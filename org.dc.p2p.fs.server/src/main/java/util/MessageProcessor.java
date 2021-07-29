@@ -100,7 +100,7 @@ public class MessageProcessor implements Runnable {
                     responseMsg = leaveResMessage;
                 break;
             case "SER":
-                String fname = String.join(" ", Arrays.asList(mes).subList(4, mes.length-2));
+                String fname = String.join(" ", Arrays.asList(mes).subList(4, mes.length-1));
                 String str = node.isFilePresent(fname);
                 int count = str.split(" ").length;
                 if (str.length() > 0) {
