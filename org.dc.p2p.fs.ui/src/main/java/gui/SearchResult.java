@@ -47,16 +47,11 @@ public class SearchResult {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedfile = (String) ResultList.getSelectedValue();
-                String ServerIP = null;
-                String ServerPort = null;
-                for (Result result : node.getResultList()) {
-                    for (String filename : result.getFileList()) {
-                        if (filename == ResultList.getSelectedValue()) {
-                            ServerIP = result.getIp();
-                            ServerPort = String.valueOf(result.getPort());
-                        }
-                    }
-                }
+                String[] parts = selectedfile.split(" - ");
+                selectedfile = parts[1];
+                String[] IpPort = parts[0].split(":");
+                String ServerIP = IpPort[0].substring(1,IpPort[0].length());
+                String ServerPort = IpPort[1].substring(0,IpPort[1].length()-1);
                 log.info("Downloading [" + selectedfile + "] from server node " + ServerIP + ":" + ServerPort);
                 try {
                     downloadUtil.downloadFile(ServerIP, ServerPort, ResultList.getSelectedValue().toString());

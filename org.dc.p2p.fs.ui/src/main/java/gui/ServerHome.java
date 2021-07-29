@@ -92,7 +92,7 @@ public class ServerHome {
     for (Result result : node.getResultList()) {
      for (String filename : result.getFileList()) {
       log.info(filename + "files found in server node with IP:" + result.getIp());
-      DLM.addElement(filename);
+      DLM.addElement("[" + result.getIp() + ":" + result.getPort() + "] - " + filename);
      }
     }
 
