@@ -44,6 +44,7 @@ public class HelthcheckService {
                 } catch (Exception exception) {
                     log.error("Could not unregister Node after Healthcheck failure.");
                 }
+                //throw new RuntimeException("Stopping the Neighbour 1 Health Check");
             }
         };
         Runnable neighbour2 = () -> {
@@ -64,6 +65,7 @@ public class HelthcheckService {
                 } catch (Exception exception) {
                     log.error("Could not unregister Node after Healthcheck failure.");
                 }
+                //throw new RuntimeException("Stopping the Neighbour 2 Health Check");
             }
         };
 
@@ -89,7 +91,7 @@ public class HelthcheckService {
         try {
             socket.receive(dpResponse);
         } catch (SocketTimeoutException e) {
-            log.error("Timeout reached for the Health Check API while receiving data from Boostrap server " , e);
+            log.error("Timeout reached for the Health Check API while receiving data from Boostrap server.");
             socket.close();
         }
         String bsResponse = new String(dpResponse.getData(),0,dpResponse.getLength());
@@ -99,6 +101,8 @@ public class HelthcheckService {
 
     private boolean processHealth(String msg){
         String[] mes = msg.split(" ");
-        return mes[1].equals("HEALTHOK");
+        if (mes.length > 1) {
+            return mes[1].equals("HEALTHOK");
+        } else return false;
     }
 }
