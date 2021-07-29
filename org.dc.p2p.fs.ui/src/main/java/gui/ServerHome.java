@@ -40,8 +40,8 @@ public class ServerHome {
  private static final Logger log = LoggerFactory.getLogger(ServerHome.class);
 
  public void setServerIPServerPortTextPane(JTextPane serverIPServerPortTextPane, ServerConfigurations configs) {
-  serverIPServerPortTextPane.setText("Server IP :" + configs.getServerIP() + "\n" +
-          "Server Port :" + configs.getServerPort());
+  serverIPServerPortTextPane.setText("Server Name :" + configs.getServerName() + "\nServer IP :" + configs.getServerIP() +
+          "\nServer Port :" + configs.getServerPort());
  }
 
  public void setTextPaneFiles(JTextPane textPaneFiles, ServerConfigurations config) {
