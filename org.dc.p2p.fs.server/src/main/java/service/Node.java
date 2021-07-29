@@ -29,6 +29,7 @@ public class Node {
     public static String bsServerIP;
     private String[] resultList;
     private Query query;
+    private int hopCount = 5;
     private final Service service = new Service();
     private List<String> fileList;
     public static List<Neighbour> neighboursList = new ArrayList<>();
@@ -38,7 +39,7 @@ public class Node {
     private final List<Result> resultObjList = new ArrayList<>();
     private static final Logger log = LoggerFactory.getLogger(Node.class);
 
-    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit, int restServicePort){
+    public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit, int restServicePort, int hopCount){
         this.serverIP = ip;
         this.serverName = serverName;
         this.serverPort = port;
@@ -47,6 +48,7 @@ public class Node {
         this.soTimeout = soTimeout;
         this.retryLimit = retryLimit;
         this.restServicePort = restServicePort;
+        this.hopCount = hopCount;
         neighbourMap.put("Joined",neighboursList);
         neighbourMap.put("Connected", connectedNeighboursList);
         retry=true;

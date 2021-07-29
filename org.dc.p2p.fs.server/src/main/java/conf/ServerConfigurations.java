@@ -88,6 +88,8 @@ public class ServerConfigurations {
 
     public int getRestServicePort() { return  getIntegerProperty("REST_SERVICE_PORT"); }
 
+    public int getHopCount() { return  getIntegerProperty("HOP_COUNT"); }
+
     private int getIntegerProperty(String propertyName){
         try{
             String propFileLocation = System.getProperty("propFileLocation");
