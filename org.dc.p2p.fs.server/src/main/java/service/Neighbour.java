@@ -47,7 +47,7 @@ public class Neighbour {
         try {
             socket.receive(dpResponse);
         } catch (SocketTimeoutException e) {
-            log.info("Timeout reached while receiving data from the Neighbour server.",e);
+            log.error("Timeout reached while receiving data from the Neighbour server.");
             socket.close();
             return false;
         }
