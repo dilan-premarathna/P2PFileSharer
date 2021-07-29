@@ -141,6 +141,7 @@ public class ServerHome {
   label1.setText("Files");
   JPFiles.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
   textPaneFiles = new JTextPane();
+  textPaneFiles.setEditable(false);
   JPFiles.add(textPaneFiles, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
   JPNeighbours = new JPanel();
   JPNeighbours.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 10), -1, -1));
@@ -149,6 +150,7 @@ public class ServerHome {
   label2.setText("Neighbours");
   JPNeighbours.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
   textPaneNeighbours = new JTextPane();
+  textPaneNeighbours.setEditable(false);
   JPNeighbours.add(textPaneNeighbours, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
   JPBottom = new JPanel();
   JPBottom.setLayout(new BorderLayout(0, 0));
@@ -162,6 +164,7 @@ public class ServerHome {
   JPServerInfo.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 0, 10), -1, -1));
   ServerMain.add(JPServerInfo, new GridConstraints(3, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, new Dimension(-1, 50), 0, false));
   serverIPServerPortTextPane = new JTextPane();
+  serverIPServerPortTextPane.setEditable(false);
   serverIPServerPortTextPane.setText("Server IP :\nServer Port : \n");
   JPServerInfo.add(serverIPServerPortTextPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
   final JPanel panel1 = new JPanel();

@@ -47,7 +47,9 @@
                 <preferred-size width="150" height="50"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
         </children>
       </grid>
@@ -73,7 +75,9 @@
                 <preferred-size width="150" height="50"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
         </children>
       </grid>
@@ -117,6 +121,7 @@
               </grid>
             </constraints>
             <properties>
+              <editable value="false"/>
               <text value="Server IP :&#10;Server Port : &#10;"/>
             </properties>
           </component>
