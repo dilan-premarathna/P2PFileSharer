@@ -45,7 +45,7 @@ public class UIMain {
     }
 
     static void InitServerHomeUI(ServerConfigurations configs, Node node){
-        JFrame frame = new JFrame("ServerHome");
+        JFrame frame = new JFrame(configs.getServerName());
         frame.setContentPane(new ServerHome(configs, node).ServerMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

@@ -120,7 +120,12 @@ public class MessageProcessor implements Runnable {
                     String result = message.substring(30,message.length());
                     System.out.println("SEROK result msg *** "+result);
                     log.info("SEROK message sent "+result);
-                    node.addToResultObjList(node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#")));
+                    Result foundResult = node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#"));
+                    if(!node.resultExists(foundResult)) {
+                        node.addToResultObjList(foundResult);
+                    } else {
+                        log.info("########## Result already exists in the Obj list. Skipped!!!  ##########");
+                    }
                 }
                 break;
             case "HEALTH":
