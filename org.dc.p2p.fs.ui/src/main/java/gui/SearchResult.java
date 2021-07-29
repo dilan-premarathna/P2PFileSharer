@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Node;
 import client.api.downloadUtil;
+import util.Result;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,14 +42,23 @@ public class SearchResult {
         searchString.setText("Search Result for : " + searchtext);
     }
 
-    public SearchResult(ServerConfigurations configs) {
+    public SearchResult(ServerConfigurations configs, Node node) {
 
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                log.info("Downloading ..." + ResultList.getSelectedValue());
-                String ServerIP = "127.0.0.1";
-                String ServerPort = "5050";
+                String selectedfile = (String) ResultList.getSelectedValue();
+                String ServerIP = null;
+                String ServerPort = null;
+                for (Result result : node.getResultList()) {
+                    for (String filename : result.getFileList()) {
+                        if (filename == ResultList.getSelectedValue()) {
+                            ServerIP = result.getIp();
+                            ServerPort = String.valueOf(result.getPort());
+                        }
+                    }
+                }
+                log.info("Downloading [" + selectedfile + "] from server node " + ServerIP + ":" + ServerPort);
                 try {
                     downloadUtil.downloadFile(ServerIP, ServerPort, ResultList.getSelectedValue().toString());
                     JOptionPane.showMessageDialog(new JFrame(),
