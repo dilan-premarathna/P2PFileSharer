@@ -223,6 +223,10 @@ public class Node {
         resultObjList.add(result);
     }
 
+    public boolean resultExists(Result result) {
+        return resultObjList.contains(result);
+    }
+
     public String getResultIP() {
 
         return resultIP;
