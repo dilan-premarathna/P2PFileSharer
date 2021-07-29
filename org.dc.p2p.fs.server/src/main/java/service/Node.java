@@ -149,8 +149,8 @@ public class Node {
         boolean status;
         for (String element : fileList ) {
             tempElementArr = Arrays.asList(element.split(" "));
-            for (String str: tempElementArr) {
-                str = str.toLowerCase();
+            for (int i = 0; i < tempElementArr.size(); i++) {
+                tempElementArr.set(i, tempElementArr.get(i).toLowerCase());
             }
             status = true;
             for (String item: searchArr) {

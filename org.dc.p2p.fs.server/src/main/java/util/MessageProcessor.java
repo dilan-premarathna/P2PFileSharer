@@ -119,7 +119,7 @@ public class MessageProcessor implements Runnable {
                 break;
             case "SEROK":
                 if(Integer.parseInt(mes[2]) > 0) {
-                    String result = message.substring(30,message.length());
+                    String result = concatMsg(mes);
                     System.out.println("SEROK result msg *** "+result);
                     log.info("SEROK message sent "+result);
                     Result foundResult = node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#"));
@@ -141,6 +141,14 @@ public class MessageProcessor implements Runnable {
         }
         return responseMsg;
 
+    }
+
+    private String concatMsg(String[] message) throws IOException {
+        String concatString="";
+        for (int i = 6; i < message.length; i++){
+            concatString = concatString.concat(message[i]).concat(" ");
+        }
+        return concatString.substring(0,concatString.length()-1);
     }
 
 }
