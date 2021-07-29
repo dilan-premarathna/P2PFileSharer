@@ -54,7 +54,7 @@ public class Node {
 
     public boolean registerNode() throws Exception {
 
-        boolean registerStatus = false;
+        boolean registerStatus = true;
         Neighbour[] neighbours = new Neighbour[0];
         String regMessage = "REG " + serverIP + " " + serverPort + " " + serverName;
         regMessage = String.format("%04d", regMessage.length() + 5) + " " + regMessage;
@@ -68,10 +68,10 @@ public class Node {
         if (neighbours.length != 0) {
             boolean neighbourConnectStatus = processNeighbour(neighbours);
             if (!neighbourConnectStatus) {
+                registerStatus = false;
                 unRegisterNode();
             } else {
                 retryCount = 0;
-                registerStatus = true;
             }
         }
         return registerStatus;

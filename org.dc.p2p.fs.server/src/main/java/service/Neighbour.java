@@ -31,9 +31,9 @@ public class Neighbour {
 
         String joinMessage = "JOIN " + clientIP + " " + clientPort;
         joinMessage = String.format("%04d", joinMessage.length() + 5) + " " + joinMessage;
-        log.info(joinMessage);
 
         InetAddress ia = InetAddress.getByName(getIp());
+        log.info(joinMessage+" sent to ip "+ia +" port "+getPort());
         byte[] messageBytes = joinMessage.getBytes();
         DatagramPacket packet = new DatagramPacket(messageBytes, messageBytes.length, ia, getPort());
 
