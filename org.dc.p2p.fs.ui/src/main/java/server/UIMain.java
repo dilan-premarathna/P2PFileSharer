@@ -5,7 +5,9 @@ import gui.ServerHome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.HelthcheckService;
+import service.Neighbour;
 import service.Node;
+import util.Service;
 
 import javax.swing.*;
 import java.util.List;
@@ -42,6 +44,27 @@ public class UIMain {
         node.setFileList(fList);
 
         InitServerHomeUI(configs, node);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                log.info("System shutdown hook triggered.!!!");
+                try {
+                    // node leave at shutdown.
+                    Service service = new Service();
+                    String leave = "LEAVE " + configs.getServerIP() + " " + configs.getServerPort();
+                    String leaveMessage = String.format("%04d", leave.length() + 5) + " " + leave;
+                    for (Neighbour neighbour : node.getNeighboursList()) {
+                        service.send(leaveMessage, neighbour.getIp(), neighbour.getPort());
+                    }
+                    // node unregister from BS
+                    node.setRetry(false);
+                    node.unRegisterNode();
+                } catch (Exception e) {
+                    log.error("Error while unregistering node.");
+                }
+            }
+        }));
     }
 
     static void InitServerHomeUI(ServerConfigurations configs, Node node){
