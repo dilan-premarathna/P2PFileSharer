@@ -99,7 +99,7 @@ public class ServerHome {
     SearchResult searchResult = new SearchResult(configs, node);
     searchResult.init(node, searchString, DLM);
 
-    JFrame ResultFrame = new JFrame(configs.getServerName() + " Search Results");
+    JFrame ResultFrame = new JFrame(configs.getServerName() + " Search Results ");
     ResultFrame.setContentPane(searchResult.SearchResult);
     ResultFrame.pack();
     ResultFrame.setVisible(true);
