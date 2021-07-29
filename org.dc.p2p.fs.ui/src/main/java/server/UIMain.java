@@ -29,7 +29,7 @@ public class UIMain {
         log.info("BS Port = " + configs.getBSPort());
 
         Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(),
-                configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort());
+                configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort(), configs.getHopCount());
         boolean regState = node.registerNode();
         if (regState){
             node.startListner();
