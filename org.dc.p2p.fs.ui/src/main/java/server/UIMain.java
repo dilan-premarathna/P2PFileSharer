@@ -28,7 +28,10 @@ public class UIMain {
 
         Node node = new Node(configs.getServerIP(), configs.getServerPort(), configs.getServerName(), configs.getBSIP(),
                 configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort());
-        node.registerNode();
+        boolean regState = node.registerNode();
+        if (regState){
+            node.startListner();
+        }
 
         // Initialize health check API
         HelthcheckService service = new HelthcheckService(node);

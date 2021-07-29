@@ -1,13 +1,13 @@
 package util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.Neighbour;
 import service.Node;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.Arrays;
 import java.util.List;
 
 public class MessageProcessor implements Runnable {
@@ -18,6 +18,7 @@ public class MessageProcessor implements Runnable {
     private final String nodeIP;
     private final int serverPort;
     private final Service service = new Service();
+    private static final Logger log = LoggerFactory.getLogger(MessageProcessor.class);
 
     public MessageProcessor(Node node, String nodeIP, int port){
         this.node = node;
@@ -31,6 +32,7 @@ public class MessageProcessor implements Runnable {
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket(serverPort);
+            log.info("Listener starting on "+ serverPort);
             while (!stopListner) {
 
                 byte[] b1 = new byte[2048];
@@ -46,7 +48,7 @@ public class MessageProcessor implements Runnable {
             }
         } catch (IOException e) {
             socket.close();
-            System.err.println(e);
+            log.error("Error in socket listener");
         }
     }
 
@@ -57,14 +59,14 @@ public class MessageProcessor implements Runnable {
         String ip;
         String responseMsg="";
 
-        System.out.println("New Message: " + message);
+        log.info("Message received by listener " + message);
 
         switch (mes[1]) {
             case "JOIN":
 
                     ip = mes[2];
                     port = Integer.parseInt(mes[3]);
-                    System.out.println("New JOIN message");
+                    log.info("New JOIN message ");
 
                     Neighbour neighbour = new Neighbour(ip,port);
                     boolean neighbourExist = false;
@@ -79,14 +81,12 @@ public class MessageProcessor implements Runnable {
                         connectedNeighbourList.add(neighbour);
                         joinResMessage = "JOINOK " + "0";}
                     else {
-                        System.out.println("##### neighbour exist ######");
+                        log.warn("Already existing neighbour");
                         joinResMessage = "JOINOK " + "0";
                     }
-
-
                     joinResMessage = String.format("%04d", joinResMessage.length() + 5) + " " + joinResMessage;
                     responseMsg = joinResMessage;
-                    System.out.println("res:" + joinResMessage);
+                    log.info("Response message for JOIN req " + joinResMessage);
                 break;
 
             case "LEAVE":
@@ -105,7 +105,6 @@ public class MessageProcessor implements Runnable {
                     int length = msg.length() + 5;
                     msg = String.format("%04d", length) + msg;
                     service.send(msg, mes[2], Integer.parseInt(mes[3]));
-                    //send
                 } else {
                     mes[5] = String.valueOf(Integer.parseInt(mes[5]) - 1);
                     if (!mes[5].equals("0")) {
@@ -120,17 +119,17 @@ public class MessageProcessor implements Runnable {
                 if(Integer.parseInt(mes[2]) > 0) {
                     String result = message.substring(30,message.length());
                     System.out.println("SEROK result msg *** "+result);
+                    log.info("SEROK message sent "+result);
                     node.addToResultObjList(node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#")));
                 }
                 break;
-
             case "HEALTH":
                 String healthRes = "HEALTHOK";
                 String healthMessage = String.format("%04d", healthRes.length() + 5) + " " + healthRes;
                 responseMsg = healthMessage;
                 break;
             default:
-                System.err.println("Error: " + message);
+                log.error("Message received by lister does not match any case " + message);
                 break;
         }
         return responseMsg;
