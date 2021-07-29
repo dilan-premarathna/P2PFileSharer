@@ -140,16 +140,27 @@ public class Node {
     }
 
     public String isFilePresent(String fName) {
+        String [] searchArr = fName.split(" ");
+        List<String> foundList  = new ArrayList<>();
 
         StringBuilder fileStr = new StringBuilder();
-        for (String element : fileList
-        ) {
-            if (element.toLowerCase().contains(fName.toLowerCase())) fileStr.append(element).append("#");
+        List <String> tempElementArr = new ArrayList<>();
+        boolean status;
+        for (String element : fileList ) {
+            tempElementArr = Arrays.asList(element.split(" "));
+            status = true;
+            for (String item: searchArr) {
+                if(!tempElementArr.contains(item)) {
+                    status = false;
+                    break;
+                }
+            }
+            if(status) {
+                foundList.add(element);
+            }
+
         }
-        if (fileStr.toString().length()>0){
-            return fileStr.substring(0,fileStr.toString().length()-1);}
-        else {
-        return fileStr.toString();}
+       return String.join("#", foundList);
     }
 
     public void searchFiles(String fName) throws IOException {
@@ -224,7 +235,7 @@ public class Node {
 
     public boolean resultExists(Result result) {
         for (Result element : resultObjList ) {
-            if(element.getIp() == result.getIp() && element.getPort() == result.getPort()) {
+            if(element.getIp().equals(result.getIp()) && element.getPort() == result.getPort()) {
                 return true;
             }
         }
