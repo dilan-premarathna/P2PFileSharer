@@ -6,8 +6,10 @@ import service.Neighbour;
 import service.Node;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.Arrays;
 import java.util.List;
 
 public class MessageProcessor implements Runnable {
@@ -98,20 +100,20 @@ public class MessageProcessor implements Runnable {
                     responseMsg = leaveResMessage;
                 break;
             case "SER":
-                String str = node.isFilePresent(mes[4]);
+                String fname = String.join(" ", Arrays.asList(mes).subList(4, mes.length-2));
+                String str = node.isFilePresent(fname);
                 int count = str.split(" ").length;
                 if (str.length() > 0) {
                     String msg = " SEROK " + count + " " + nodeIP + " " + node.getRestServicePort() + " " + "1" + " " + str;
                     int length = msg.length() + 5;
                     msg = String.format("%04d", length) + msg;
                     service.send(msg, mes[2], Integer.parseInt(mes[3]));
-                } else {
-                    mes[5] = String.valueOf(Integer.parseInt(mes[5]) - 1);
-                    if (!mes[5].equals("0")) {
-                        String joined = String.join(" ", mes);
-                        for (Neighbour neighbour_ : connectedNeighbourList) {
-                            service.send(joined, neighbour_.getIp(), neighbour_.getPort());
-                        }
+                }
+                mes[mes.length-1] = String.valueOf(Integer.parseInt(mes[mes.length-1]) - 1);
+                if (!mes[mes.length-1].equals("0")) {
+                    String joined = String.join(" ", mes);
+                    for (Neighbour neighbour_ : connectedNeighbourList) {
+                        service.send(joined, neighbour_.getIp(), neighbour_.getPort());
                     }
                 }
                 break;
