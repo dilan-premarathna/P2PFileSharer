@@ -1,6 +1,5 @@
 package conf;
 
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -87,7 +86,7 @@ public class ServerConfigurations {
 
     public int getRetryLimit(){return getIntegerProperty("RETRY_LIMIT");}
 
-    public int getRestServicePort() { return  getIntegerProperty("REST_SREVICE_PORT"); }
+    public int getRestServicePort() { return  getIntegerProperty("REST_SERVICE_PORT"); }
 
     private int getIntegerProperty(String propertyName){
         try{
