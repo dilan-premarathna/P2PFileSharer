@@ -140,6 +140,7 @@ public class Node {
     }
 
     public String isFilePresent(String fName) {
+        log.info("Running file check with string: " + fName);
         String [] searchArr = fName.split(" ");
         List<String> foundList  = new ArrayList<>();
 
@@ -148,9 +149,12 @@ public class Node {
         boolean status;
         for (String element : fileList ) {
             tempElementArr = Arrays.asList(element.split(" "));
+            for (String str: tempElementArr) {
+                str = str.toLowerCase();
+            }
             status = true;
             for (String item: searchArr) {
-                if(!tempElementArr.contains(item)) {
+                if(!tempElementArr.contains(item.toLowerCase())) {
                     status = false;
                     break;
                 }
