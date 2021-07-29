@@ -46,7 +46,6 @@ public class Service {
         DatagramSocket socket;
 
         socket = new DatagramSocket();
-        socket.setSoTimeout(5000);
 
         InetAddress IPAddress = InetAddress.getByName(ip);
         byte[] toSend  = message.getBytes();

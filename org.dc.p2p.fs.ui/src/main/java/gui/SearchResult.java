@@ -54,7 +54,7 @@ public class SearchResult {
                 String ServerPort = IpPort[1].substring(0,IpPort[1].length()-1);
                 log.info("Downloading [" + selectedfile + "] from server node " + ServerIP + ":" + ServerPort);
                 try {
-                    downloadUtil.downloadFile(ServerIP, ServerPort, ResultList.getSelectedValue().toString());
+                    downloadUtil.downloadFile(ServerIP, ServerPort, selectedfile);
                     JOptionPane.showMessageDialog(new JFrame(),
                             "Download Complete \nDownload Location :" + configs.getFilesStorage(),
                             "Download Status",
