@@ -84,7 +84,8 @@ public class ServerHome {
 
     try {
      node.searchFiles(searchString);
-    } catch (IOException ex) {
+     Thread.sleep(500);
+    } catch (IOException | InterruptedException ex) {
      ex.printStackTrace();
     }
     DefaultListModel DLM = new DefaultListModel();
