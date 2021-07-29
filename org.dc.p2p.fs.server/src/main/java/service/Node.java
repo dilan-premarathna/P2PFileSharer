@@ -84,7 +84,7 @@ public class Node {
         String unRegMessage = "UNREG " + serverIP + " " + serverPort + " " + serverName;
         unRegMessage = String.format("%04d", unRegMessage.length() + 5) + " " + unRegMessage;
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
-        log.error(serverName +" unregistered from the BS. BS Response: " + bsResponse);
+        log.info(serverName +" unregistered from the BS. BS Response: " + bsResponse);
         retryCount += 1;
         neighboursList.clear();
         if (retry){
