@@ -190,41 +190,6 @@ public class Node {
         log.info("Searching done!");
     }
 
-    private void decodeAndAct(String recQuery) throws IOException {
-
-        String[] msgList = recQuery.split(" ");
-
-        if (msgList[1].equals("SER")) {
-            String str = isFilePresent(msgList[4]);
-            if (str.length() > 0) {
-                String msg = " SEROK " + serverIP + " " + serverPort + " " + str + " " + "1";
-                int length = msg.length() + 5;
-                msg = String.format("%04d", length) + msg;
-                service.send(msg, msgList[2], Integer.parseInt(msgList[3]));
-                //send
-            } else {
-                msgList[5] = String.valueOf(Integer.parseInt(msgList[5]) - 1);
-                if (!msgList[5].equals("0")) {
-                    String joined = String.join(" ", msgList);
-                    for (Neighbour neighbour : neighboursList) {
-                        service.send(joined, neighbour.getIp(), neighbour.getPort());
-                    }
-                }
-            }
-        } else if (msgList[1].equals("SEROK") && Integer.parseInt(msgList[2]) > 0) {
-            resultIP = msgList[3];
-            resultPort = Integer.parseInt(msgList[4]);
-            resultList = Arrays.copyOfRange(msgList, 6, msgList.length);
-        }
-
-    }
-
-    public void receiveFromNeighbours() throws IOException {
-
-        String recQuery = service.receive(serverPort);
-        decodeAndAct(recQuery);
-    }
-
     public List<Result> getResultList() {
         return resultObjList;
     }
