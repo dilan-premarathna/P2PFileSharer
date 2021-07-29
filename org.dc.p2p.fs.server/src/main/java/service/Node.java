@@ -158,19 +158,18 @@ public class Node {
         if (str.length() > 0) {
             resultList = str.split("#");
             resultObjList.add(setResultObj(serverIP, restServicePort, resultList));
-        } else {
-            query = new Query(this.serverIP, this.serverPort, fName, 5);
-            log.info("Query string for search files "+ query.getMsgString());
-
-            for (Neighbour neighbour : neighboursList) {
-                service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
-            }
-
-            for (Neighbour neighbour : connectedNeighboursList) {
-                service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
-            }
-
         }
+        query = new Query(this.serverIP, this.serverPort, fName, 5);
+        log.info("Query string for search files "+ query.getMsgString());
+
+        for (Neighbour neighbour : neighboursList) {
+            service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
+        }
+
+        for (Neighbour neighbour : connectedNeighboursList) {
+            service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
+        }
+
         log.info("Searching done!");
     }
 
@@ -224,7 +223,12 @@ public class Node {
     }
 
     public boolean resultExists(Result result) {
-        return resultObjList.contains(result);
+        for (Result element : resultObjList ) {
+            if(element.getIp() == result.getIp() && element.getPort() == result.getPort()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getResultIP() {
