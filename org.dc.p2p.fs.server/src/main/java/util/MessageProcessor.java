@@ -135,6 +135,13 @@ public class MessageProcessor implements Runnable {
                 String healthMessage = String.format("%04d", healthRes.length() + 5) + " " + healthRes;
                 responseMsg = healthMessage;
                 break;
+            case "NODELIST":
+                String nodeListRes = "NODEOK ";
+                String nodeListResMsg = String.format("%04d", nodeListRes.length() + 5) + " " + nodeListRes;
+                for (Neighbour neigh : connectedNeighbourList){
+                    nodeListResMsg = nodeListResMsg.concat(neigh.getIp() +" "+neigh.getPort()+" ");
+                }
+                responseMsg = nodeListResMsg;
             default:
                 log.error("Message received by lister does not match any case " + message);
                 break;
