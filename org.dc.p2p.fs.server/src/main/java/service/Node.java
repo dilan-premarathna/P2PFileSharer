@@ -74,7 +74,6 @@ public class Node {
             }
         }
         startListner();
-        log.info(neighbours.toString());
     }
 
     public void unRegisterNode() throws Exception {
