@@ -30,8 +30,10 @@ public class UIMain {
                 configs.getBSPort(), configs.getSocketTimeout(), configs.getRetryLimit(), configs.getRestServicePort());
         node.registerNode();
 
+        // Initialize health check API
         HelthcheckService service = new HelthcheckService(node);
         service.scheduleTask(Node.neighboursList);
+
         List<String> fList = configs.getRandomNameList();
         log.info(fList.toString());
         node.setFileList(fList);

@@ -31,7 +31,6 @@ public class Swagger2SpringBoot implements CommandLineRunner {
         builder.run(args);
         // Initialize UI and UDP communication links
         new UIMain(configs);
-        // Initialize health check API
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {

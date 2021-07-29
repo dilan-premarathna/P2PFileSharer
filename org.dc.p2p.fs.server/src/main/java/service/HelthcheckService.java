@@ -7,7 +7,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -35,12 +34,17 @@ public class HelthcheckService {
                         node.unRegisterNode();
                     }
                 } else {
-                    log.info("No neighbour nodes found to start HealthCheck API.");
+                    log.warn("No neighbour nodes found to start HealthCheck API.");
                 }
             } catch (Exception e) {
-//                log.error("Health Check failed for the neighbour " +
-//                        neighbourList.get(0).getIp() + ":" + neighbourList.get(0).getPort(),e);
-                // unreg neighbour
+                log.error("Health Check failed for the neighbour " +
+                        neighbourList.get(0).getIp() + ":" + neighbourList.get(0).getPort(),e);
+                try {
+                    node.unRegisterNode();
+                } catch (Exception exception) {
+                    log.error("Could not unregister Node after Healthcheck failure.");
+                }
+                //throw new RuntimeException("Stopping the Neighbour 1 Health Check");
             }
         };
         Runnable neighbour2 = () -> {
@@ -51,23 +55,27 @@ public class HelthcheckService {
                         node.unRegisterNode();
                     }
                 } else {
-                    log.info("No 2nd neighbour node found to start HealthCheck API.");
+                    log.warn("No 2nd neighbour node found to start HealthCheck API.");
                 }
             } catch (Exception e) {
-//                log.error("Health Check failed for the neighbour " +
-//                        neighbourList.get(1).getIp() + ":" + neighbourList.get(1).getPort(),e);
-                // unreg neighbour
+                log.error("Health Check failed for the neighbour " +
+                        neighbourList.get(1).getIp() + ":" + neighbourList.get(1).getPort(),e);
+                try {
+                    node.unRegisterNode();
+                } catch (Exception exception) {
+                    log.error("Could not unregister Node after Healthcheck failure.");
+                }
+                //throw new RuntimeException("Stopping the Neighbour 2 Health Check");
             }
         };
 
         executor.scheduleAtFixedRate(neighbour1, 5, 30, TimeUnit.SECONDS);
         executor.scheduleAtFixedRate(neighbour2, 5, 30, TimeUnit.SECONDS);
-
     }
 
     private boolean checkServerHealth(Neighbour neighbour) throws Exception {
 
-        log.info("Helath check on "+neighbour.getIp()+" "+neighbour.getPort());
+        log.info("Health check on "+neighbour.getIp()+" "+neighbour.getPort());
         InetAddress ia = InetAddress.getByName(neighbour.getIp());
         String healthMessage = String.format("%04d", hltMsg.length() + 5) + " " + hltMsg;
         byte[] messageBytes = healthMessage.getBytes();
@@ -83,23 +91,18 @@ public class HelthcheckService {
         try {
             socket.receive(dpResponse);
         } catch (SocketTimeoutException e) {
-            log.error("Timeout reached while receiving data from Boostrap server " , e);
+            log.error("Timeout reached for the Health Check API while receiving data from Boostrap server.");
             socket.close();
         }
         String bsResponse = new String(dpResponse.getData(),0,dpResponse.getLength());
         socket.close();
         return processHealth(bsResponse);
-
     }
 
     private boolean processHealth(String msg){
         String[] mes = msg.split(" ");
-
-        if (mes[1].equals("HEALTHOK")){
-            return true;
-        }else {
-            return false;
-        }
-
+        if (mes.length > 1) {
+            return mes[1].equals("HEALTHOK");
+        } else return false;
     }
 }
