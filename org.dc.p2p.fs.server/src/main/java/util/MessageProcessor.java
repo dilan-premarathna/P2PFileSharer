@@ -124,7 +124,7 @@ public class MessageProcessor implements Runnable {
                     log.info("SEROK message sent "+result);
                     Result foundResult = node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#"));
                     if(!node.resultExists(foundResult)) {
-                        log.info("#PERF# Result found  Files: " + result + "Hops: " + mes[5]);
+                        log.info("#PERF# Result found  Files: " + result + "Hops: " + (node.getHopCount()- Integer.parseInt(mes[5])));
                         node.addToResultObjList(foundResult);
                     } else {
                         log.info("########## Result already exists in the Obj list. Skipped!!!  ##########");
