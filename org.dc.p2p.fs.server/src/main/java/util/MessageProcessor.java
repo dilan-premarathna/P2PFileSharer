@@ -104,7 +104,7 @@ public class MessageProcessor implements Runnable {
                 String str = node.isFilePresent(fname);
                 int count = str.split(" ").length;
                 if (str.length() > 0) {
-                    String msg = " SEROK " + count + " " + nodeIP + " " + node.getRestServicePort() + " " + "1" + " " + str;
+                    String msg = " SEROK " + count + " " + nodeIP + " " + node.getRestServicePort() + " " + mes[mes.length-1] + " " + str;
                     int length = msg.length() + 5;
                     msg = String.format("%04d", length) + msg;
                     service.send(msg, mes[2], Integer.parseInt(mes[3]));
@@ -124,6 +124,7 @@ public class MessageProcessor implements Runnable {
                     log.info("SEROK message sent "+result);
                     Result foundResult = node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#"));
                     if(!node.resultExists(foundResult)) {
+                        log.info("#PERF# Result found  Files: " + result + "Hops: " + mes[5]);
                         node.addToResultObjList(foundResult);
                     } else {
                         log.info("########## Result already exists in the Obj list. Skipped!!!  ##########");
