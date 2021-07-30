@@ -34,7 +34,7 @@ public class HelthcheckService {
                         node.unRegisterNode();
                     }
                 } else {
-                    log.warn("No 2nd neighbour node found to start HealthCheck API.");
+                    log.warn("No neighbour1 node found to start HealthCheck API.");
                 }
             } catch (Exception e) {
                 log.error("Health Check failed for the neighbour " +
@@ -55,7 +55,7 @@ public class HelthcheckService {
                         node.unRegisterNode();
                     }
                 } else {
-                    log.warn("No 2nd neighbour node found to start HealthCheck API.");
+                    log.warn("No neighbour2 node found to start HealthCheck API.");
                 }
             } catch (Exception e) {
                 log.error("Health Check failed for the neighbour " +
