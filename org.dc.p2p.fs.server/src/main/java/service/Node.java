@@ -174,10 +174,11 @@ public class Node {
         log.info("#PERF# Search started with string:" + fName);
         String str = isFilePresent(fName);
         if (str.length() > 0) {
+            log.info("#PERF# Result found  Files:" + str + "Hops: " + 0 + "from local node");
             resultList = str.split("#");
             resultObjList.add(setResultObj(serverIP, restServicePort, resultList));
         }
-        query = new Query(this.serverIP, this.serverPort, fName, 5);
+        query = new Query(this.serverIP, this.serverPort, fName, hopCount-1);
         log.info("Query string for search files "+ query.getMsgString());
 
         for (Neighbour neighbour : neighboursList) {
@@ -260,4 +261,9 @@ public class Node {
 
         this.retry = retry;
     }
+
+    public int getHopCount() {
+        return hopCount;
+    }
+
 }
