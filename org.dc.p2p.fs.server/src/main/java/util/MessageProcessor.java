@@ -100,10 +100,12 @@ public class MessageProcessor implements Runnable {
                     responseMsg = leaveResMessage;
                 break;
             case "SER":
+                log.info("#MESSAGE#  #RECEIVED#");
                 String fname = String.join(" ", Arrays.asList(mes).subList(4, mes.length-1));
                 String str = node.isFilePresent(fname);
                 int count = str.split(" ").length;
                 if (str.length() > 0) {
+                    log.info("#MESSAGE#  #ANSWERED#");
                     String msg = " SEROK " + count + " " + nodeIP + " " + node.getRestServicePort() + " " + mes[mes.length-1] + " " + str;
                     int length = msg.length() + 5;
                     msg = String.format("%04d", length) + msg;
@@ -111,6 +113,7 @@ public class MessageProcessor implements Runnable {
                 }
                 mes[mes.length-1] = String.valueOf(Integer.parseInt(mes[mes.length-1]) - 1);
                 if (!mes[mes.length-1].equals("0")) {
+                    log.info("#MESSAGE#  #FORWARDED#");
                     String joined = String.join(" ", mes);
                     for (Neighbour neighbour_ : connectedNeighbourList) {
                         service.send(joined, neighbour_.getIp(), neighbour_.getPort());
