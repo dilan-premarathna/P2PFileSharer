@@ -171,6 +171,7 @@ public class Node {
 
     public void searchFiles(String fName) throws IOException {
         resultObjList.clear();
+        log.info("#PERF# Search started with string:" + fName);
         String str = isFilePresent(fName);
         if (str.length() > 0) {
             resultList = str.split("#");
