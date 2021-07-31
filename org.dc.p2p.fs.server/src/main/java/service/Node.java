@@ -90,7 +90,7 @@ public class Node {
         log.info(serverName +" unregistered from the BS. BS Response: " + bsResponse);
         retryCount += 1;
         for (Neighbour neighbour : routingTable) {
-            routingTable.removeIf(neigh -> (neigh.getIp().equals(neighbour.getIp()) && neigh.getPort() == neighbour.getPort()));
+            removeDataFromRoutingTable(neighbour.getIp(),neighbour.getPort(),routingTable);
         }
 
         neighboursList.clear();
@@ -283,5 +283,8 @@ public class Node {
     public static void setRoutingTable(List<Neighbour> routingTable) {
 
         Node.routingTable = routingTable;
+    }
+    public synchronized void removeDataFromRoutingTable(String ip, int port, List<Neighbour> routingTable) {
+        routingTable.removeIf(neigh -> (neigh.getIp().equals(ip) && neigh.getPort() == port));
     }
 }
