@@ -54,7 +54,7 @@ public class UIMain {
                     Service service = new Service();
                     String leave = "LEAVE " + configs.getServerIP() + " " + configs.getServerPort();
                     String leaveMessage = String.format("%04d", leave.length() + 5) + " " + leave;
-                    for (Neighbour neighbour : node.getNeighboursList()) {
+                    for (Neighbour neighbour : node.getRoutingTable()) {
                         service.send(leaveMessage, neighbour.getIp(), neighbour.getPort());
                     }
                     // node unregister from BS

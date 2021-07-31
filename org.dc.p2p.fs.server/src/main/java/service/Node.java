@@ -36,6 +36,7 @@ public class Node {
     public static List<Neighbour> neighboursList = new ArrayList<>();
     public boolean retry;
     public static List<Neighbour> connectedNeighboursList = new ArrayList<>();
+    public static List<Neighbour> routingTable = new ArrayList<>();
     public static Map<String, List<Neighbour>> neighbourMap = new HashMap<>();
     private final List<Result> resultObjList = new ArrayList<>();
     private Instant starttime;
@@ -88,6 +89,10 @@ public class Node {
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
         log.info(serverName +" unregistered from the BS. BS Response: " + bsResponse);
         retryCount += 1;
+        for (Neighbour neighbour : routingTable) {
+            routingTable.removeIf(neigh -> (neigh.getIp().equals(neighbour.getIp()) && neigh.getPort() == neighbour.getPort()));
+        }
+
         neighboursList.clear();
         if (retry){
             if (retryCount <= retryLimit) {
@@ -136,7 +141,7 @@ public class Node {
 
         boolean connectSuccess = false;
         for (Neighbour neighbour : neighbours) {
-            connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort, soTimeout);
+            connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort, soTimeout,routingTable);
             if (!connectSuccess)
                 return false;
         }
@@ -174,6 +179,7 @@ public class Node {
     public void searchFiles(String fName) throws IOException {
         resultObjList.clear();
         log.info("#PERF# Search started with string:" + fName);
+        log.info("#PERF# Routing table size "+ routingTable.size());
         starttime = Instant.now();
         String str = isFilePresent(fName);
         if (str.length() > 0) {
@@ -184,11 +190,7 @@ public class Node {
         query = new Query(this.serverIP, this.serverPort, fName, hopCount-1);
         log.info("Query string for search files "+ query.getMsgString());
 
-        for (Neighbour neighbour : neighboursList) {
-            service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
-        }
-
-        for (Neighbour neighbour : connectedNeighboursList) {
+        for (Neighbour neighbour : routingTable) {
             service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
         }
 
@@ -273,4 +275,13 @@ public class Node {
         return starttime;
     }
 
+    public static List<Neighbour> getRoutingTable() {
+
+        return routingTable;
+    }
+
+    public static void setRoutingTable(List<Neighbour> routingTable) {
+
+        Node.routingTable = routingTable;
+    }
 }
