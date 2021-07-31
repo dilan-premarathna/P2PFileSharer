@@ -89,10 +89,9 @@ public class Node {
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
         log.info(serverName +" unregistered from the BS. BS Response: " + bsResponse);
         retryCount += 1;
-        for (Neighbour neighbour : routingTable) {
-            removeDataFromRoutingTable(neighbour.getIp(),neighbour.getPort(),routingTable);
+        for (Neighbour neighbour : neighboursList) {
+            removeDataFromRoutingTable(neighbour.getIp(),neighbour.getPort());
         }
-
         neighboursList.clear();
         if (retry){
             if (retryCount <= retryLimit) {
@@ -284,7 +283,7 @@ public class Node {
 
         Node.routingTable = routingTable;
     }
-    public synchronized void removeDataFromRoutingTable(String ip, int port, List<Neighbour> routingTable) {
+    public synchronized void removeDataFromRoutingTable(String ip, int port) {
         routingTable.removeIf(neigh -> (neigh.getIp().equals(ip) && neigh.getPort() == port));
     }
 }
