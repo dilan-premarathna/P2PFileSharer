@@ -111,7 +111,7 @@ public class MessageProcessor implements Runnable {
                 ip = mes[2];
                 port = Integer.parseInt(mes[3]);
                 connectedNeighbourList.removeIf(neigh -> (neigh.getIp().equals(ip) && neigh.getPort() == port));
-                routingTable.removeIf(neigh -> (neigh.getIp().equals(ip) && neigh.getPort() == port));
+                node.removeDataFromRoutingTable(ip,port,routingTable);
                 String leaveResMessage = "LEAVEOK " + "0";
                 leaveResMessage = String.format("%04d", leaveResMessage.length() + 5) + " " + leaveResMessage;
                 responseMsg = leaveResMessage;

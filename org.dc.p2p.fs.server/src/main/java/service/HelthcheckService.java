@@ -18,6 +18,9 @@ public class HelthcheckService {
     public static ScheduledExecutorService executor;
     private Node node;
     private String hltMsg = "HEALTH";
+    private int retryCount =3;
+    int nodeOneRetry =0 ;
+    int nodeTwoRetry =0 ;
 
     public HelthcheckService(Node node){
         log.info("Initializing HealthCheck API...");
@@ -26,12 +29,19 @@ public class HelthcheckService {
     }
 
     public void scheduleTask(List<Neighbour> neighbourList) {
+
         Runnable neighbour1 = () -> {
             try {
                 if (!neighbourList.isEmpty() && neighbourList.get(0) != null) {
                     boolean neighbourHealthy = checkServerHealth(neighbourList.get(0));
+
                     if(!neighbourHealthy){
-                        node.unRegisterNode();
+                        nodeOneRetry +=1;
+                        if (nodeOneRetry >retryCount){
+                            node.unRegisterNode();
+                            nodeOneRetry =0;}
+                    }else {
+                        nodeOneRetry =0;
                     }
                 } else {
                     log.warn("No neighbour1 node found to start HealthCheck API.");
@@ -52,7 +62,11 @@ public class HelthcheckService {
                 if (!neighbourList.isEmpty() && neighbourList.size()>1 && neighbourList.get(1) != null) {
                     boolean neighbourHealthy = checkServerHealth(neighbourList.get(1));
                     if(!neighbourHealthy){
+                        if (nodeTwoRetry >retryCount){
                         node.unRegisterNode();
+                        nodeTwoRetry=0;}
+                    }else {
+                        nodeTwoRetry =0;
                     }
                 } else {
                     log.warn("No neighbour2 node found to start HealthCheck API.");

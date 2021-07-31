@@ -33,7 +33,7 @@ public class Service {
             socket.close();
             return null;
         }
-        String bsResponse = new String(dpResponse.getData());
+        String bsResponse = new String(dpResponse.getData(),0,dpResponse.getLength());
         log.info("result is " + bsResponse);
         socket.close();
         return bsResponse.trim();
