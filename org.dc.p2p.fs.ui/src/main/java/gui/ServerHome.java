@@ -125,7 +125,7 @@ public class ServerHome {
  private void $$$setupUI$$$() {
   ServerMain = new JPanel();
   ServerMain.setLayout(new GridLayoutManager(6, 6, new Insets(0, 0, 0, 0), -1, -1));
-  ServerMain.setPreferredSize(new Dimension(800, 500));
+  ServerMain.setPreferredSize(new Dimension(500, 250));
   ServerMain.setRequestFocusEnabled(true);
   ServerMain.setBorder(BorderFactory.createTitledBorder(null, "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
   searchButton = new JButton();
