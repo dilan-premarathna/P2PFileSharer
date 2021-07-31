@@ -89,6 +89,10 @@ public class Node {
         String bsResponse = service.sendToBS(unRegMessage, bsServerIP, bsServerPort, soTimeout);
         log.info(serverName +" unregistered from the BS. BS Response: " + bsResponse);
         retryCount += 1;
+        for (Neighbour neighbour : routingTable) {
+            routingTable.removeIf(neigh -> (neigh.getIp().equals(neighbour.getIp()) && neigh.getPort() == neighbour.getPort()));
+        }
+
         neighboursList.clear();
         if (retry){
             if (retryCount <= retryLimit) {
@@ -175,6 +179,7 @@ public class Node {
     public void searchFiles(String fName) throws IOException {
         resultObjList.clear();
         log.info("#PERF# Search started with string:" + fName);
+        log.info("#PERF# Routing table size "+ routingTable.size());
         starttime = Instant.now();
         String str = isFilePresent(fName);
         if (str.length() > 0) {

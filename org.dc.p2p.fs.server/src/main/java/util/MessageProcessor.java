@@ -111,6 +111,7 @@ public class MessageProcessor implements Runnable {
                 ip = mes[2];
                 port = Integer.parseInt(mes[3]);
                 connectedNeighbourList.removeIf(neigh -> (neigh.getIp().equals(ip) && neigh.getPort() == port));
+                routingTable.removeIf(neigh -> (neigh.getIp().equals(ip) && neigh.getPort() == port));
                 String leaveResMessage = "LEAVEOK " + "0";
                 leaveResMessage = String.format("%04d", leaveResMessage.length() + 5) + " " + leaveResMessage;
                 responseMsg = leaveResMessage;
@@ -139,8 +140,7 @@ public class MessageProcessor implements Runnable {
             case "SEROK":
                 if (Integer.parseInt(mes[2]) > 0) {
                     String result = concatMsg(mes);
-                    System.out.println("SEROK result msg *** " + result);
-                    log.info("SEROK message sent " + result);
+                    log.info("SEROK message received " + result);
                     Result foundResult = node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#"));
                     if (!node.resultExists(foundResult)) {
                         Instant end = Instant.now();
