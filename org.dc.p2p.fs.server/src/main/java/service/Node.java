@@ -36,6 +36,7 @@ public class Node {
     public static List<Neighbour> neighboursList = new ArrayList<>();
     public boolean retry;
     public static List<Neighbour> connectedNeighboursList = new ArrayList<>();
+    public static List<Neighbour> routingTable = new ArrayList<>();
     public static Map<String, List<Neighbour>> neighbourMap = new HashMap<>();
     private final List<Result> resultObjList = new ArrayList<>();
     private Instant starttime;
@@ -136,7 +137,7 @@ public class Node {
 
         boolean connectSuccess = false;
         for (Neighbour neighbour : neighbours) {
-            connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort, soTimeout);
+            connectSuccess = neighbour.NeighbourConnect(neighboursList, serverIP, serverPort, soTimeout,routingTable);
             if (!connectSuccess)
                 return false;
         }
@@ -184,11 +185,7 @@ public class Node {
         query = new Query(this.serverIP, this.serverPort, fName, hopCount-1);
         log.info("Query string for search files "+ query.getMsgString());
 
-        for (Neighbour neighbour : neighboursList) {
-            service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
-        }
-
-        for (Neighbour neighbour : connectedNeighboursList) {
+        for (Neighbour neighbour : routingTable) {
             service.send(query.getMsgString(), neighbour.getIp(), neighbour.getPort());
         }
 
@@ -273,4 +270,13 @@ public class Node {
         return starttime;
     }
 
+    public static List<Neighbour> getRoutingTable() {
+
+        return routingTable;
+    }
+
+    public static void setRoutingTable(List<Neighbour> routingTable) {
+
+        Node.routingTable = routingTable;
+    }
 }

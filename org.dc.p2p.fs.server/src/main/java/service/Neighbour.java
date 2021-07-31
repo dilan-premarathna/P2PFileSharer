@@ -27,7 +27,7 @@ public class Neighbour {
         return this.port;
     }
 
-    public boolean NeighbourConnect(List<Neighbour> neighbourList, String clientIP, int clientPort, int soTimeout) throws Exception {
+    public boolean NeighbourConnect(List<Neighbour> neighbourList, String clientIP, int clientPort, int soTimeout, List<Neighbour> routingTable) throws Exception {
 
         String joinMessage = "JOIN " + clientIP + " " + clientPort;
         joinMessage = String.format("%04d", joinMessage.length() + 5) + " " + joinMessage;
@@ -55,10 +55,10 @@ public class Neighbour {
         String nodeResponse = new String(dpResponse.getData());
         log.info("neighbour response is " + nodeResponse);
         socket.close();
-        return processNodeResponse(nodeResponse.trim(), neighbourList);
+        return processNodeResponse(nodeResponse.trim(), neighbourList, routingTable);
     }
 
-    public boolean processNodeResponse(String message, List<Neighbour> neighbourList)
+    public boolean processNodeResponse(String message, List<Neighbour> neighbourList, List<Neighbour> routingTable)
             throws Exception {
 
         String[] mes = message.split(" ");
@@ -76,6 +76,16 @@ public class Neighbour {
                 }
                 if (neighbourExist == false) {
                     neighbourList.add(this);
+                }
+                neighbourExist = false;
+                for (Neighbour neb : routingTable) {
+                    if (neb.getIp().equals(this.getIp()) && neb.getPort() == this.getPort()) {
+                        neighbourExist = true;
+                        break;
+                    }
+                }
+                if (neighbourExist == false) {
+                    routingTable.add(this);
                 }
             } else if (mes[2].equals("9999")) {
                 throw new Exception("failed, can’t register." + " initial join failed");
