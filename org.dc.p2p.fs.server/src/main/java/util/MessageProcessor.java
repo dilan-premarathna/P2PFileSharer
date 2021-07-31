@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -118,6 +120,9 @@ public class MessageProcessor implements Runnable {
                     for (Neighbour neighbour_ : connectedNeighbourList) {
                         service.send(joined, neighbour_.getIp(), neighbour_.getPort());
                     }
+                    for (Neighbour neighbour_ : node.getNeighboursList()) {
+                        service.send(joined, neighbour_.getIp(), neighbour_.getPort());
+                    }
                 }
                 break;
             case "SEROK":
@@ -127,7 +132,10 @@ public class MessageProcessor implements Runnable {
                     log.info("SEROK message sent "+result);
                     Result foundResult = node.setResultObj(mes[3], Integer.parseInt(mes[4]), result.split("#"));
                     if(!node.resultExists(foundResult)) {
+                        Instant end = Instant.now();
+                        Duration diff = Duration.between(node.getStarttime(), end);
                         log.info("#PERF# Result found  Files: " + result + "Hops: " + (node.getHopCount()- Integer.parseInt(mes[5])));
+                        log.info("#PERF TIME# Response latency " + diff.toString());
                         node.addToResultObjList(foundResult);
                     } else {
                         log.info("########## Result already exists in the Obj list. Skipped!!!  ##########");

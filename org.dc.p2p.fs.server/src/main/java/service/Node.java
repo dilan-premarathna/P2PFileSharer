@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import util.Query;
 import util.Result;
 import util.Service;
+import java.time.Instant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class Node {
     public static List<Neighbour> connectedNeighboursList = new ArrayList<>();
     public static Map<String, List<Neighbour>> neighbourMap = new HashMap<>();
     private final List<Result> resultObjList = new ArrayList<>();
+    private Instant starttime;
     private static final Logger log = LoggerFactory.getLogger(Node.class);
 
     public Node(String ip, int port, String serverName, String bsServerIP, int bsServerPort, int soTimeout, int retryLimit, int restServicePort, int hopCount){
@@ -172,6 +174,7 @@ public class Node {
     public void searchFiles(String fName) throws IOException {
         resultObjList.clear();
         log.info("#PERF# Search started with string:" + fName);
+        starttime = Instant.now();
         String str = isFilePresent(fName);
         if (str.length() > 0) {
             log.info("#PERF# Result found  Files:" + str + "Hops: " + 0 + "from local node");
@@ -264,6 +267,10 @@ public class Node {
 
     public int getHopCount() {
         return hopCount;
+    }
+
+    public Instant getStarttime() {
+        return starttime;
     }
 
 }
